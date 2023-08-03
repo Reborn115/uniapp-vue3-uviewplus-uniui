@@ -1,5 +1,6 @@
 // const BASE_URL = "http://43.143.162.177:11500";
-const BASE_URL = "https://www.haorui.xyz";
+// const BASE_URL = "https://www.haorui.xyz";
+const BASE_URL = "https://api.apiopen.top";
 
 const request = (url, method, data, header = {}) => {
   return new Promise((resolve, reject) => {

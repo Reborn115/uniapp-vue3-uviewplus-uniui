@@ -1,7 +1,11 @@
 <script setup>
 import { ref, reactive,onMounted,onBeforeMount } from 'vue'
-onMounted(()=>{
+import request from '../../request/request'
+onMounted(async ()=>{
 	console.log('onMounted!!!!!!!!!')
+	// request('/api/personal-center/detail','get',)
+	const res = await request('/api/sentences','get')
+	console.log("!!!  ",res)
 })
 onBeforeMount(()=>{
 	console.log('onBeforeMount!!!!!!!!!')
