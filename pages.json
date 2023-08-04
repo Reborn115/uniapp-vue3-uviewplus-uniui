@@ -1,18 +1,16 @@
 {
 	"easycom": {
-			"autoscan": true,
-			"custom": {
-				// uni-ui 规则如下配置
-				"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
-			}
+		"autoscan": true,
+		"custom": {
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
 	},
 	"pages": [
-		
 		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "Palzoo",
-				"navigationBarTextStyle":"white",
+				"navigationBarTextStyle": "white",
 				"navigationBarBackgroundColor": "#3BCAF2",
 				"enablePullDownRefresh": false
 			}
@@ -21,7 +19,7 @@
 			"path": "pages/message/message",
 			"style": {
 				"navigationBarTitleText": "Palzoo",
-				"navigationBarTextStyle":"white",
+				"navigationBarTextStyle": "white",
 				"navigationBarBackgroundColor": "#3BCAF2",
 				"enablePullDownRefresh": false
 			}
@@ -30,30 +28,34 @@
 			"path": "pages/mine/mine",
 			"style": {
 				"navigationBarTitleText": "Palzoo",
-				"navigationBarTextStyle":"white",
+				"navigationBarTextStyle": "white",
 				"navigationBarBackgroundColor": "#3BCAF2",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/index/containerDetail/containerDetail",
+			"style": {
+				"navigationBarTitleText": "Palzoo",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor": "#3BCAF2",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
 		}
-	    /* ,{
-            "path" : "pages/login/login",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        } */
-        
-        
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "Palzoo",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
-	// 配置tabbar导航栏
 	"tabBar": {
 		"borderStyle": "black",
 		"selectedColor": "#62DFE5",
@@ -64,12 +66,14 @@
 				"iconPath": "static/home1.png",
 				"selectedIconPath": "static/home2.png",
 				"text": "主页"
-			},{
+			},
+			{
 				"pagePath": "pages/message/message",
 				"iconPath": "static/message1.png",
 				"selectedIconPath": "static/message2.png",
 				"text": "消息"
-			},{
+			},
+			{
 				"pagePath": "pages/mine/mine",
 				"iconPath": "static/person1.png",
 				"selectedIconPath": "static/person2.png",
@@ -77,6 +81,5 @@
 			}
 		]
 	},
-
 	"uniIdRouter": {}
 }
