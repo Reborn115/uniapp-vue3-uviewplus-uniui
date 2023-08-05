@@ -46,6 +46,15 @@
         } */
         
         
+        ,{
+            "path" : "pages/pollutionMonitor/pollutionMonitor",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "污染检测",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
