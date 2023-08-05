@@ -9,36 +9,36 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "Palzoo",
-				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor": "#3BCAF2",
+				"navigationBarTitleText": "ContainerManager",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ffffff",
 				"enablePullDownRefresh": false
 			}
 		},
 		{
 			"path": "pages/message/message",
 			"style": {
-				"navigationBarTitleText": "Palzoo",
-				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor": "#3BCAF2",
+				"navigationBarTitleText": "ContainerManager",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ffffff",
 				"enablePullDownRefresh": false
 			}
 		},
 		{
 			"path": "pages/mine/mine",
 			"style": {
-				"navigationBarTitleText": "Palzoo",
-				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor": "#3BCAF2",
+				"navigationBarTitleText": "ContainerManager",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ffffff",
 				"enablePullDownRefresh": false
 			}
 		},
 		{
 			"path": "pages/index/containerDetail/containerDetail",
 			"style": {
-				"navigationBarTitleText": "Palzoo",
-				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor": "#3BCAF2",
+				"navigationBarTitleText": "查询结果",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ffffff",
 				"enablePullDownRefresh": false
 			}
 		},
