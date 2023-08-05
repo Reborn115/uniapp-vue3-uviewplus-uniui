@@ -1,7 +1,7 @@
 {
-    "name" : "Palzoo",
-    "appid" : "__UNI__3D17C96",
-    "description" : "一个用来找搭子的小程序",
+    "name" : "portManage_c",
+    "appid" : "__UNI__8B03F76",
+    "description" : "天津港c端",
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
