@@ -4,7 +4,7 @@ import request from '../../request/request'
 onMounted(async ()=>{
 	console.log('onMounted!!!!!!!!!')
 	// request('/api/personal-center/detail','get',)
-	const res = await request('/api/sentences','get')
+	const res = await request('https://api.apiopen.top/api/sentences','get')
 	console.log("!!!  ",res)
 })
 onBeforeMount(()=>{
