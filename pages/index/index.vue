@@ -22,8 +22,6 @@ const containerNumber = ref('EITU178639');
 const containerInfo=ref('');
 const cameraImagePath = ref('');
 
-import { defineAsyncComponent } from 'vue';
-
 // 调用接口进行搜索并获取数据
 async function searchContainerData(containerNumber) {
   const res = await request("/api/yard/get-containerInfoByNumber", "POST", {
