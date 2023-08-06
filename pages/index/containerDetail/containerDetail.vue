@@ -68,8 +68,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,toRefs, defineProps  } from 'vue';
 import importedTableData from './tableData.js';
+
 
 const containerMaximumLoad = ref('27280');
 const containerTare = ref('3200');
@@ -87,10 +88,28 @@ const total = ref(0);
 const loading = ref(false);
 const selectedIndexs = ref([]);
 
+const dataParam = ref('');
+
 onMounted(() => {
+  const pages = getCurrentPages();
+  const currentPage = pages[pages.length - 1];
+  const query = currentPage.options;
+  if (query.data) {
+    // 解码并解析传递的数据
+    dataParam.value = JSON.parse(decodeURIComponent(query.data));
+    console.log('dataParam.value',dataParam.value.containerInfo);
+    // 可以在这里使用 dataParam.value 进行后续操作
+    // 比如将接收到的值赋给其他 reactive 或者 ref 变量
+  }
   selectedIndexs.value = [];
   getData(1);
 });
+
+// onMounted(() => {
+
+//   selectedIndexs.value = [];
+//   getData(1);
+// });
 
 // 多选处理
 // function selectedItems() {
