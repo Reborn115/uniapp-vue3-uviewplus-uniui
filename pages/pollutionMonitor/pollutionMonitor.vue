@@ -1,14 +1,8 @@
-<template>
-	<view class="charts-box">
-		<qiun-data-charts type="demotype" :animation="false" :loadingType="2" :opts="{update:true}" :chartData="state.chartData" />
-		<qiun-data-charts type="demotype" :animation="false" :loadingType="2" :opts="{update:true}" :chartData="state.chartData1" />
-		<h1 @click="changeCanvas">change</h1>
-	</view>
-</template>   
 <script setup>
 import { reactive, onMounted, toRefs } from 'vue'
 import QiunDataCharts from '../../uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue'
 import request from '../../request/request'
+import text from '../../uni_modules/uview-plus/libs/config/props/text';
 
 let state = reactive({
 	chartData: {
@@ -227,10 +221,70 @@ onMounted(async () => {
 
 </script>
 
+<template>
+	<view class="charts-box">        
+        <view class="gridFont">
+            <view class="displayFont" style="grid-area: a1;">
+                <text class="iconfont">&#xea33;</text>
+                <text>空气温度</text>
+                <text>{{state.chartData.series[3].data[4]}}</text>
+            </view>        
+            <view class="displayFont" style="grid-area: a2;">
+                <text class="iconfont">&#xea34;</text>
+                <text>空气湿度</text>
+                <text>{{state.chartData.series[0].data[4]}}</text>
+            </view>        
+            <view class="displayFont" style="grid-area: a3;">
+                <text class="iconfont">&#xea2e;</text>
+                <text>总溶解固体</text>
+                <text>{{state.chartData.series[2].data[4]}}</text>
+            </view>        
+            <view class="displayFont" style="grid-area: b1;">
+                <text class="iconfont">&#xe63d;</text>
+                <text>PM2.5</text>
+                <text>{{state.chartData.series[1].data[4]}}</text>
+            </view>        
+            <view class="displayFont" style="grid-area: b2;">
+                <text class="iconfont">&#xe6c1;</text>
+                <text>浊度</text>
+                <text>{{state.chartData1.series[0].data[4]}}</text>
+            </view>
+        </view> 
+
+		<qiun-data-charts type="demotype" :animation="false" :loadingType="2" :opts="{update:true}" :chartData="state.chartData" />
+		<qiun-data-charts type="demotype" :animation="false" :loadingType="2" :opts="{update:true}" :chartData="state.chartData1" />
+		<h1 @click="changeCanvas">change</h1>
+	</view>
+</template>   
+
 <style scoped>
+@import url('../../static/font_4198834_igs7ray9o7f/iconfont.css');
 .charts-box {
 	width: 100%;
 	height: 300px;
+    margin: 10rpx;
+}
+.iconfont{
+    color: #1296db;
+    font-size: 45rpx;
+}
+.displayFont{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin: 0 45rpx;
+    font-size: 30rpx;
+}
+
+.gridFont{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);    
+    grid-template-areas: 
+        "a1 a2 a3"
+        "b1 b2 b2";    
+    /* display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap; */
 }
 </style>
-   
