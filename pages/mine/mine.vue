@@ -4,7 +4,7 @@ import request from '../../request/request'
 onMounted(async ()=>{
 	console.log('onMounted!!!!!!!!!')
 	// request('/api/personal-center/detail','get',)
-	const res = await request('https://api.apiopen.top/api/sentences','get')
+	const res = await request('https://api.apiopen.top/api/sentences','get',undefined,undefined,true)
 	console.log("!!!  ",res)
 })
 onBeforeMount(()=>{
@@ -49,13 +49,6 @@ function jumpPage() {
 				<view class="profile-name">{{ profileData.name }}</view>
 				<view class="iconfont icon-xiugaixinxi" @click="jumpPage">修改个人信息</view>
 			</view>			
-			<!-- <view class="profile-renzheng" v-if="isCompleteMsg">
-			<van-button round size="small" type="primary">已完善 √</van-button>
-		  </view>
-		  <view class="profile-renzheng2" v-else>
-			<van-button round size="small" type="warning" @click="jumpPage"
-			  >未完善</van-button>
-		  </view> -->
 		</view>
 
 		<!-- 其他 -->
