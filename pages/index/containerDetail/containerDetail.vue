@@ -98,39 +98,13 @@ onMounted(() => {
     // 解码并解析传递的数据
     dataParam.value = JSON.parse(decodeURIComponent(query.data));
     console.log('dataParam.value',dataParam.value.containerInfo);
-    // 可以在这里使用 dataParam.value 进行后续操作
-    // 比如将接收到的值赋给其他 reactive 或者 ref 变量
   }
-  selectedIndexs.value = [];
   getData(1);
 });
 
-// onMounted(() => {
-
-//   selectedIndexs.value = [];
-//   getData(1);
-// });
-
-// 多选处理
-// function selectedItems() {
-//   return selectedIndexs.value.map((i) => tableData.value[i]);
-// }
-
-// 多选
-// function selectionChange(e) {
-//   console.log(e.detail.index);
-//   selectedIndexs.value = e.detail.index;
-// }
-
-// 批量删除
-// function delTable() {
-//   console.log(selectedItems());
-// }
 
 // 分页触发
 function change(e) {
-  // $refs.table.clearSelection();
-  // selectedIndexs.value.length = 0;
   getData(e.current);
 }
 
