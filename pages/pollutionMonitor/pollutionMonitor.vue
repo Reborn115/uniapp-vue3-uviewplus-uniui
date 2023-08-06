@@ -125,15 +125,12 @@ let mockData1 = {
 }
 //获取数据
 async function getMonitorData(){
-	const res = await request("https://cs.api.yuleng.top/api/iot/sensor/data","get")
+	const res = await request("/api/iot/sensor/data","get")
 	console.log("get data::::::",res)
 }
 
-function renderUpdateData(){
-	// let xData = [1, 2, 3, 4, 5];
-	let tempData=mockData.data.data
-	// let yData={}	
-	// await getServerData(xData, yData);
+function renderUpdateData(){	
+	let tempData=mockData.data.data	
 	for (let index = 0; index < 5; index++) {
 		setTimeout(()=>{
 			console.log("setTimeout")
@@ -163,11 +160,7 @@ function getServerData(xData, yData) {
 			{
 				name: "temperature",
 				data: yData.temperature
-			},
-			// {
-			// 	name: "turbidity",
-			// 	data: yData.turbidity
-			// }
+			},			
 		]
 	}
 		let res1 = {
