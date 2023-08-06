@@ -5,7 +5,7 @@ const BASE_URL = "https://cs.api.yuleng.top";
 const request = (url, method, data, header = {},requestType) => {
   return new Promise((resolve, reject) => {
     console.log("openid", uni.getStorageSync("openid"));
-    if (url != "/controller/topic/search" && url != "/control/sign/in") {
+    if ( url != "/api/login/b") {
       if (!uni.getStorageSync("openid")) {
         uni.navigateTo({
           url: "/pages/login/login",
