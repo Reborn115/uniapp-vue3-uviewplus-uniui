@@ -1,7 +1,8 @@
 // const BASE_URL = "http://43.143.162.177:11500";
-const BASE_URL = "https://www.haorui.xyz";
+// const BASE_URL = "https://www.haorui.xyz";
+const BASE_URL = "https://cs.api.yuleng.top";
 
-const request = (url, method, data, header = {}) => {
+const request = (url, method, data, header = {},requestType) => {
   return new Promise((resolve, reject) => {
     console.log("openid", uni.getStorageSync("openid"));
     if (url != "/controller/topic/search" && url != "/control/sign/in") {
@@ -12,7 +13,7 @@ const request = (url, method, data, header = {}) => {
       }
     }
     uni.request({
-      url: BASE_URL + url,
+      url: !requestType ? BASE_URL + url : url,
       method: method,
       data: data,
       header: Object.assign(
