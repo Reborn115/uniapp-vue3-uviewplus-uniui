@@ -47,13 +47,13 @@
         </uni-tr>
         <uni-tr v-for="(item, index) in tableData" :key="index">
           <uni-td align="center">
-            <view class="td-item">{{ item.operate }}</view>
+            <view class="td-item">{{ item.operation }}</view>
           </uni-td>
           <uni-td align="center">
-            <view class="td-item">{{ item.operatePlace }}</view>
+            <view class="td-item">{{ item.location }}</view>
           </uni-td>
           <uni-td align="center">
-            <view class="td-item">{{ item.operateDate }}</view>
+            <view class="td-item">{{ item.operationTime }}</view>
           </uni-td>
           <uni-td align="center">
             <view class="td-item">{{ item.operateTime }}</view>
@@ -97,7 +97,17 @@ onMounted(() => {
   if (query.data) {
     // 解码并解析传递的数据
     dataParam.value = JSON.parse(decodeURIComponent(query.data));
-    console.log('dataParam.value',dataParam.value.containerInfo);
+    const containerInfo=dataParam.value.containerInfo;
+    console.log('dataParam.value.containerOperations',dataParam.value.containerOperations);
+    // tableData.value=dataParam.value.containerOperations;
+    // console.log('tableData',tableData);
+    console.log('containerInfo',containerInfo);
+    containerBreakage.value=containerInfo.damage;
+    containerNumber.value=containerInfo.number;
+    containerOwner.value=containerInfo.owner;
+    containerState.value=containerInfo.status;
+    containerType.value=containerInfo.type;
+    containerMaximumLoad.value=containerInfo.bearing;
   }
   getData(1);
 });
@@ -132,21 +142,21 @@ function getData(pageNum, value = '') {
 // 伪request请求
 function request(options) {
   const { pageSize, pageCurrent, success, value } = options;
-  let tableDataLength = importedTableData.length;
-  let data = importedTableData.filter((item, index) => {
+  let tableDataLength = dataParam.value.containerOperations.length;
+  let data = dataParam.value.containerOperations.filter((item, index) => {
     const idx = index - (pageCurrent - 1) * pageSize;
     return idx < pageSize && idx >= 0;
   });
   if (value) {
     data = [];
-    importedTableData.forEach((item) => {
+    dataParam.value.containerOperations.forEach((item) => {
       if (item.name.indexOf(value) !== -1) {
         data.push(item);
       }
     });
     tableDataLength = data.length;
   }
-
+  console.log('requestdata',data);
   setTimeout(() => {
     typeof success === 'function' &&
       success({

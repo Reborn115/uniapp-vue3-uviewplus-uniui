@@ -82,8 +82,13 @@ const showCamera = () => {
         },
         name: 'file',
         success: (uploadRes) => {
-          console.log('上传成功', uploadRes);
+          console.log('上传成功', JSON.parse(uploadRes.data));
+          const containerInfo=JSON.parse(uploadRes.data).data
+          console.log('containerInfo',containerInfo);
           // 处理上传成功后的逻辑
+          uni.navigateTo({
+            url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(containerInfo)),
+          });
         },
         fail: (uploadError) => {
           console.error('上传失败：', uploadError);
