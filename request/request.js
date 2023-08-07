@@ -4,9 +4,10 @@ const BASE_URL = "https://cs.api.yuleng.top";
 
 const request = (url, method, data, header = {},requestType) => {
   return new Promise((resolve, reject) => {
-    console.log("openid", uni.getStorageSync("openid"));
-    if (url != "/controller/topic/search" && url != "/control/sign/in") {
-      if (!uni.getStorageSync("openid")) {
+    console.log("token", uni.getStorageSync("token"));
+    console.log(uni.getStorageSync("token"));
+    if ( url != "/api/login/b") {
+      if (!uni.getStorageSync("token")) {
         uni.navigateTo({
           url: "/pages/login/login",
         });
@@ -19,6 +20,7 @@ const request = (url, method, data, header = {},requestType) => {
       header: Object.assign(
         {
           "Content-Type": "application/json", // 默认请求头
+          Authorization: "Bearer " + uni.getStorageSync("token")
         },
         header
       ),
