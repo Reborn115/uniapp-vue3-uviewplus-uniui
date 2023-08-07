@@ -42,8 +42,8 @@
         <uni-tr>
           <uni-th width="40" align="center">操作</uni-th>
           <uni-th width="80" align="center">操作地点</uni-th>
-          <uni-th width="100" align="center">日期</uni-th>
-          <uni-th width="40" align="center">时间</uni-th>
+          <uni-th width="100" align="center">时间</uni-th>
+          <!-- <uni-th width="40" align="center">时间</uni-th> -->
         </uni-tr>
         <uni-tr v-for="(item, index) in tableData" :key="index">
           <uni-td align="center">
@@ -55,9 +55,9 @@
           <uni-td align="center">
             <view class="td-item">{{ item.operationTime }}</view>
           </uni-td>
-          <uni-td align="center">
+          <!-- <uni-td align="center">
             <view class="td-item">{{ item.operateTime }}</view>
-          </uni-td>
+          </uni-td> -->
         </uni-tr>
       </uni-table>
       <view class="uni-pagination-box">
@@ -70,6 +70,7 @@
 <script setup>
 import { ref, onMounted,toRefs, defineProps  } from 'vue';
 import importedTableData from './tableData.js';
+import {tsFormat} from '../../../utils/time.js';
 
 
 const containerMaximumLoad = ref('27280');
@@ -152,15 +153,20 @@ function request(options) {
     dataParam.value.containerOperations.forEach((item) => {
       if (item.name.indexOf(value) !== -1) {
         data.push(item);
+        // console.log('item',item);
       }
     });
     tableDataLength = data.length;
   }
   console.log('requestdata',data);
+  const transformedArray = data.map(({ operationTime, ...rest }) => {
+    return { operationTime: tsFormat(operationTime), ...rest };
+  });
+  console.log('transformedArray',transformedArray);
   setTimeout(() => {
     typeof success === 'function' &&
       success({
-        data: data,
+        data: transformedArray,
         total: tableDataLength,
       });
   }, 500);
