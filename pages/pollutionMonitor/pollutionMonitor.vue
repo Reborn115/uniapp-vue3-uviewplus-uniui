@@ -23,101 +23,47 @@ let mockData = {
         "data": [
             {
                 "id": 416,
-                "humidity": 73,
-                "pm": 0,
-                "tds": 0,
-                "temperature": 31,
-                "turbidity": 1990.3380126953125,
+                "humidity": 63,
+                "pm": 50,
+                "tds": 55,
+                "temperature": 23,
+                "turbidity": 1990,
                 "time": "2023-08-01T09:21:11.000+00:00"
             },
             {
                 "id": 417,
-                "humidity": 73,
-                "pm": 0,
-                "tds": 0,
+                "humidity": 43,
+                "pm": 50,
+                "tds": 50,
                 "temperature": 31,
-                "turbidity": 1956.5223388671875,
+                "turbidity": 1956,
                 "time": "2023-08-01T09:21:12.000+00:00"
             },
             {
                 "id": 418,
                 "humidity": 73,
-                "pm": 0,
-                "tds": 0,
+                "pm": 50,
+                "tds": 55,
                 "temperature": 31,
-                "turbidity": 1994.56494140625,
+                "turbidity": 1994.5,
                 "time": "2023-08-01T09:21:14.000+00:00"
             },
             {
                 "id": 419,
-                "humidity": 73,
-                "pm": 0,
+                "humidity": 53,
+                "pm": 50,
                 "tds": 0,
-                "temperature": 31,
-                "turbidity": 2003.018798828125,
+                "temperature": 21,
+                "turbidity": 2003.1,
                 "time": "2023-08-01T09:21:15.000+00:00"
             },
             {
                 "id": 420,
-                "humidity": 73,
-                "pm": 0,
-                "tds": 0,
-                "temperature": 31,
-                "turbidity": 1998.7918701171875,
-                "time": "2023-08-01T09:21:17.000+00:00"
-            }
-        ]
-    }
-}
-let mockData1 = {
-    "code": "00000",
-    "message": "请求正常",
-    "data": {
-        "lastUpdateTime": "2023-08-01T09:21:17.000+00:00",
-        "data": [
-            {
-                "id": 416,
-                "humidity": 73,
-                "pm": 0,
-                "tds": 0,
-                "temperature": 31,
-                "turbidity": 1990.3380126953125,
-                "time": "2023-08-01T09:21:11.000+00:00"
-            },
-            {
-                "id": 417,
-                "humidity": 73,
-                "pm": 0,
-                "tds": 0,
-                "temperature": 31,
-                "turbidity": 1956.5223388671875,
-                "time": "2023-08-01T09:21:12.000+00:00"
-            },
-            {
-                "id": 418,
-                "humidity": 73,
-                "pm": 0,
-                "tds": 0,
-                "temperature": 31,
-                "turbidity": 1994.56494140625,
-                "time": "2023-08-01T09:21:14.000+00:00"
-            },
-            {
-                "id": 419,
-                "humidity": 73,
-                "pm": 0,
-                "tds": 0,
-                "temperature": 31,
-                "turbidity": 2003.018798828125,
-                "time": "2023-08-01T09:21:15.000+00:00"
-            },
-            {
-                "id": 420,
-                "humidity": 73,
-                "pm": 0,
-                "tds": 0,
-                "temperature": 31,
-                "turbidity": 1998.7918701171875,
+                "humidity": 23,
+                "pm": 50,
+                "tds": 40,
+                "temperature": 39,
+                "turbidity": 1998.7,
                 "time": "2023-08-01T09:21:17.000+00:00"
             }
         ]
@@ -126,64 +72,81 @@ let mockData1 = {
 //获取数据
 async function getMonitorData(){
 	const res = await request("/api/iot/sensor/data","get")
-	console.log("get data::::::",res)
+    if(res.code!='00000'){
+        console.error('/api/iot/sensor/data ',res.message)        
+    }	
+    mockData=res //更新公共数据
+    renderUpdateData() //分5秒渲染   
 }
-
+//分5秒渲染数据
 function renderUpdateData(){	
-	let tempData=mockData.data.data	
 	for (let index = 0; index < 5; index++) {
 		setTimeout(()=>{
-			console.log("setTimeout")
-			state.chartData1.series[0].data.shift()
-			state.chartData1.series[0].data.push(tempData[index].turbidity)
+			//turbidity
+            renderSingle("chartData1",0,index,"turbidity")
+			//humidity
+            renderSingle("chartData",0,index,"humidity")
+			//temperature
+            renderSingle("chartData",3,index,"temperature")
+			//pm
+            renderSingle("chartData",1,index,"pm")
+			//tds
+            renderSingle("chartData",2,index,"tds")
 		},1000*index)	
 	}
 }
+//每一次渲染相应的某一种数据
+function renderSingle(dataArr,num,index,prop){
+    state[dataArr].series[num].data.shift()
+	state[dataArr].series[num].data.push(mockData.data.data[index][prop])
+}
 
 function getServerData(xData, yData) {	
-	setTimeout(()=>{
-		let res = {
-		categories: xData,
-		series: [
-			{
-				name: "humidity",
-				data: yData.humidity
-			},
-			{
-				name: "pm",
-				data: yData.pm
-			},
-			{
-				name: "tds",
-				data: yData.tds
-			},
-			{
-				name: "temperature",
-				data: yData.temperature
-			},			
-		]
-	}
-		let res1 = {
-		categories: xData,
-		series: [			
-			{
-				name: "turbidity",
-				data: yData.turbidity
-			}
-		]
-	}
-		state.chartData = JSON.parse(JSON.stringify(res));
-		state.chartData1 = JSON.parse(JSON.stringify(res1));
-	},1500)	
+    return new Promise((resolve, reject) => {
+        setTimeout(()=>{
+            let res = {
+            categories: xData,
+            series: [
+                {
+                    name: "humidity",
+                    data: yData.humidity //0
+                },
+                {
+                    name: "pm",
+                    data: yData.pm //1
+                },
+                {
+                    name: "tds",
+                    data: yData.tds //2
+                },
+                {
+                    name: "temperature",
+                    data: yData.temperature //3
+                },			
+            ]
+        }
+            let res1 = {
+            categories: xData,
+            series: [			
+                {
+                    name: "turbidity",
+                    data: yData.turbidity
+                }
+            ]
+        }
+            state.chartData = JSON.parse(JSON.stringify(res));
+            state.chartData1 = JSON.parse(JSON.stringify(res1));
+            resolve()
+        },1500)
+    })
 }
 
 function changeCanvas(){
-	// getMonitorData()
-	renderUpdateData()
-	if(state.chartData.series[0].data[3]==0)
-	state.chartData.series[0].data[3]=600
-	else
-	state.chartData.series[0].data[3]=0
+	getMonitorData() //获取数据	
+	// if(state.chartData.series[0].data[3]==0)
+	// state.chartData.series[0].data[3]=600
+	// else
+	// state.chartData.series[0].data[3]=0
 }
 
 onMounted(async () => {
