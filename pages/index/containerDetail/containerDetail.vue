@@ -68,8 +68,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted,toRefs, defineProps  } from 'vue';
-import importedTableData from './tableData.js';
+import { ref, onMounted  } from 'vue';
+// import importedTableData from './tableData.js';
 import {tsFormat} from '../../../utils/time.js';
 
 
@@ -83,7 +83,7 @@ const containerOwner = ref('MAERSK 马士基');
 const containerNumber = ref('PONU 2932473');
 const searchVal = ref('');
 const tableData = ref([]);
-const pageSize = 5;
+const pageSize = 3;
 const pageCurrent = ref(1);
 const total = ref(0);
 const loading = ref(false);
@@ -99,16 +99,16 @@ onMounted(() => {
     // 解码并解析传递的数据
     dataParam.value = JSON.parse(decodeURIComponent(query.data));
     const containerInfo=dataParam.value.containerInfo;
-    console.log('dataParam.value.containerOperations',dataParam.value.containerOperations);
-    // tableData.value=dataParam.value.containerOperations;
-    // console.log('tableData',tableData);
-    console.log('containerInfo',containerInfo);
+    // console.log('dataParam.value.containerOperations',dataParam.value.containerOperations);
+    // console.log('containerInfo',containerInfo);
     containerBreakage.value=containerInfo.damage;
     containerNumber.value=containerInfo.number;
     containerOwner.value=containerInfo.owner;
     containerState.value=containerInfo.status;
     containerType.value=containerInfo.type;
     containerMaximumLoad.value=containerInfo.bearing;
+    containerOther.value=containerInfo.other;
+    containerTare.value=containerInfo.weight;//Todo:确认是否为weight字段
   }
   getData(1);
 });
@@ -158,11 +158,11 @@ function request(options) {
     });
     tableDataLength = data.length;
   }
-  console.log('requestdata',data);
+  // console.log('requestdata',data);
   const transformedArray = data.map(({ operationTime, ...rest }) => {
     return { operationTime: tsFormat(operationTime), ...rest };
   });
-  console.log('transformedArray',transformedArray);
+  // console.log('transformedArray',transformedArray);
   setTimeout(() => {
     typeof success === 'function' &&
       success({
