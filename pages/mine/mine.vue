@@ -1,12 +1,8 @@
 <script setup>
-import { ref, reactive,onMounted,onBeforeMount } from 'vue'
+import { ref, reactive } from 'vue'
+import {onShow} from '@dcloudio/uni-app'
 import request from '../../request/request'
-onMounted(async ()=>{
-	// console.log('onMounted!!!!!!!!!')	
-	// const res = await request('https://api.apiopen.top/api/sentences','get',undefined,undefined,true)
-	// console.log("test request!!!  ",res)
-})
-onBeforeMount(async ()=>{	
+onShow(async ()=>{	
 	const {data:res_data} =await request('/api/personal-center/detail','get')	
 	console.log('onBeforeMount!!!!!!!!!',res_data)
 	state.data = res_data

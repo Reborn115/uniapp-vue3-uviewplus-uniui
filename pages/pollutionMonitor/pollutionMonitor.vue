@@ -3,6 +3,7 @@ import { reactive, onMounted, onUnmounted,onBeforeUnmount } from 'vue'
 import QiunDataCharts from '../../uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue'
 import request from '../../request/request'
 import text from '../../uni_modules/uview-plus/libs/config/props/text';
+import {onHide,onShow} from '@dcloudio/uni-app'
 
 let state = reactive({
 	chartData: {
@@ -145,14 +146,14 @@ function changeCanvas(){
 	getMonitorData() //获取数据	
 }
 
-function createUpdateRoutine(){        
+function createUpdateRoutine(){    
     clearInterval(timer)
     timer=setInterval(()=>{
         getMonitorData()
     },5000)    
 }
 
-onMounted(async () => {
+onShow(async () => {
     let time0=new Date()
     console.log("start------------->")
     
@@ -171,14 +172,10 @@ onMounted(async () => {
 	await getServerData(xData, yData);
 	let time1=new Date()
 	console.log("--------------》耗时：",time1-time0)
-    createUpdateRoutine()    
+    createUpdateRoutine()
 })
-onBeforeUnmount(()=>{
-    console.log("onBeforeUnmount")
-    clearInterval(timer)    
-})
-onUnmounted(()=>{
-    console.log("onUnmounted")
+onHide(()=>{
+    console.log('hide and clear Timer')
     clearInterval(timer)
 })
 var timer=null; //计时器
