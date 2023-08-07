@@ -72,12 +72,16 @@ let mockData = {
 }
 //获取数据
 async function getMonitorData(type=false){
-	const res = await request("/api/iot/sensor/data","get")
+    //监测数据是否是最新的
+	const timestamp=uni.getStorageSync("PMData")
+    console.log("timestamp=========",timestamp)
+    const res = await request("/api/iot/sensor/data","get")
     if(res.code!='00000'){
         console.error('/api/iot/sensor/data ',res.message)        
     }	
     mockData=res //更新公共数据
-    if(!type) renderUpdateData() //分5秒渲染   
+    uni.setStorage({key:"PMData",data:res.data.lastUpdateTime}) //存储时间戳校验数据时效性
+    if(!type && res.data.lastUpdateTime!=timestamp) renderUpdateData() //分5秒渲染
 }
 //分5秒渲染数据
 function renderUpdateData(){	
@@ -140,10 +144,6 @@ function getServerData(xData, yData) {
             resolve()
         },1500)
     })
-}
-
-function changeCanvas(){
-	getMonitorData() //获取数据	
 }
 
 function createUpdateRoutine(){    
@@ -212,8 +212,7 @@ var timer=null; //计时器
         </view> 
 
 		<qiun-data-charts type="demotype" :animation="false" :loadingType="2" :opts="{update:true}" :chartData="state.chartData" />
-		<qiun-data-charts type="demotype" :animation="false" :loadingType="2" :opts="{update:true}" :chartData="state.chartData1" />
-		<h1 @click="changeCanvas">change</h1>
+		<qiun-data-charts type="demotype" :animation="false" :loadingType="2" :opts="{update:true}" :chartData="state.chartData1" />		
 	</view>
 </template>   
 
