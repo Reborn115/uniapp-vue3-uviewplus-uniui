@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onMounted, toRefs } from 'vue'
+import { reactive, onMounted, onUnmounted,onBeforeUnmount } from 'vue'
 import QiunDataCharts from '../../uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue'
 import request from '../../request/request'
 import text from '../../uni_modules/uview-plus/libs/config/props/text';
@@ -70,13 +70,13 @@ let mockData = {
     }
 }
 //获取数据
-async function getMonitorData(){
+async function getMonitorData(type=false){
 	const res = await request("/api/iot/sensor/data","get")
     if(res.code!='00000'){
         console.error('/api/iot/sensor/data ',res.message)        
     }	
     mockData=res //更新公共数据
-    renderUpdateData() //分5秒渲染   
+    if(!type) renderUpdateData() //分5秒渲染   
 }
 //分5秒渲染数据
 function renderUpdateData(){	
@@ -143,23 +143,23 @@ function getServerData(xData, yData) {
 
 function changeCanvas(){
 	getMonitorData() //获取数据	
-	// if(state.chartData.series[0].data[3]==0)
-	// state.chartData.series[0].data[3]=600
-	// else
-	// state.chartData.series[0].data[3]=0
+}
+
+function createUpdateRoutine(){        
+    clearInterval(timer)
+    timer=setInterval(()=>{
+        getMonitorData()
+    },5000)    
 }
 
 onMounted(async () => {
-	let time0=new Date()
+    let time0=new Date()
+    console.log("start------------->")
+    
+    await getMonitorData(true)	
 	let xData = [1, 2, 3, 4, 5];
-	let tempData=mockData.data.data
-	let yData={}
-	// yData.humidity = tempData.map((item)=>{
-	// 	return item.humidity
-	// });
-	// yData.pm=tempData.map((item)=>{
-	// 	return item.pm
-	// })
+	let tempData=mockData.data.data    
+	let yData={}	
 	function factory(addProperty){
 		yData[addProperty]=[tempData[0][addProperty],tempData[1][addProperty],tempData[2][addProperty],tempData[3][addProperty],tempData[4][addProperty]]
 	}
@@ -167,14 +167,21 @@ onMounted(async () => {
 	factory("pm")
 	factory("tds")
 	factory("temperature")
-	factory("turbidity")
-	// yData.tds=[tempData[0]["tds"],tempData[1]["tds"],tempData[2]["tds"],tempData[3]["tds"],tempData[4]["tds"]]
-	console.log('========',yData)
+	factory("turbidity")	
 	await getServerData(xData, yData);
 	let time1=new Date()
 	console.log("--------------》耗时：",time1-time0)
+    createUpdateRoutine()    
 })
-
+onBeforeUnmount(()=>{
+    console.log("onBeforeUnmount")
+    clearInterval(timer)    
+})
+onUnmounted(()=>{
+    console.log("onUnmounted")
+    clearInterval(timer)
+})
+var timer=null; //计时器
 </script>
 
 <template>
