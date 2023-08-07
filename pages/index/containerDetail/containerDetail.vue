@@ -42,22 +42,22 @@
         <uni-tr>
           <uni-th width="40" align="center">操作</uni-th>
           <uni-th width="80" align="center">操作地点</uni-th>
-          <uni-th width="100" align="center">日期</uni-th>
-          <uni-th width="40" align="center">时间</uni-th>
+          <uni-th width="100" align="center">时间</uni-th>
+          <!-- <uni-th width="40" align="center">时间</uni-th> -->
         </uni-tr>
         <uni-tr v-for="(item, index) in tableData" :key="index">
           <uni-td align="center">
-            <view class="td-item">{{ item.operate }}</view>
+            <view class="td-item">{{ item.operation }}</view>
           </uni-td>
           <uni-td align="center">
-            <view class="td-item">{{ item.operatePlace }}</view>
+            <view class="td-item">{{ item.location }}</view>
           </uni-td>
           <uni-td align="center">
-            <view class="td-item">{{ item.operateDate }}</view>
+            <view class="td-item">{{ item.operationTime }}</view>
           </uni-td>
-          <uni-td align="center">
+          <!-- <uni-td align="center">
             <view class="td-item">{{ item.operateTime }}</view>
-          </uni-td>
+          </uni-td> -->
         </uni-tr>
       </uni-table>
       <view class="uni-pagination-box">
@@ -68,8 +68,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted,toRefs, defineProps  } from 'vue';
-import importedTableData from './tableData.js';
+import { ref, onMounted  } from 'vue';
+// import importedTableData from './tableData.js';
+import {tsFormat} from '../../../utils/time.js';
 
 
 const containerMaximumLoad = ref('27280');
@@ -82,7 +83,7 @@ const containerOwner = ref('MAERSK 马士基');
 const containerNumber = ref('PONU 2932473');
 const searchVal = ref('');
 const tableData = ref([]);
-const pageSize = 5;
+const pageSize = 3;
 const pageCurrent = ref(1);
 const total = ref(0);
 const loading = ref(false);
@@ -97,7 +98,17 @@ onMounted(() => {
   if (query.data) {
     // 解码并解析传递的数据
     dataParam.value = JSON.parse(decodeURIComponent(query.data));
-    console.log('dataParam.value',dataParam.value.containerInfo);
+    const containerInfo=dataParam.value.containerInfo;
+    // console.log('dataParam.value.containerOperations',dataParam.value.containerOperations);
+    // console.log('containerInfo',containerInfo);
+    containerBreakage.value=containerInfo.damage;
+    containerNumber.value=containerInfo.number;
+    containerOwner.value=containerInfo.owner;
+    containerState.value=containerInfo.status;
+    containerType.value=containerInfo.type;
+    containerMaximumLoad.value=containerInfo.bearing;
+    containerOther.value=containerInfo.other;
+    containerTare.value=containerInfo.weight;//Todo:确认是否为weight字段
   }
   getData(1);
 });
@@ -132,25 +143,30 @@ function getData(pageNum, value = '') {
 // 伪request请求
 function request(options) {
   const { pageSize, pageCurrent, success, value } = options;
-  let tableDataLength = importedTableData.length;
-  let data = importedTableData.filter((item, index) => {
+  let tableDataLength = dataParam.value.containerOperations.length;
+  let data = dataParam.value.containerOperations.filter((item, index) => {
     const idx = index - (pageCurrent - 1) * pageSize;
     return idx < pageSize && idx >= 0;
   });
   if (value) {
     data = [];
-    importedTableData.forEach((item) => {
+    dataParam.value.containerOperations.forEach((item) => {
       if (item.name.indexOf(value) !== -1) {
         data.push(item);
+        // console.log('item',item);
       }
     });
     tableDataLength = data.length;
   }
-
+  // console.log('requestdata',data);
+  const transformedArray = data.map(({ operationTime, ...rest }) => {
+    return { operationTime: tsFormat(operationTime), ...rest };
+  });
+  // console.log('transformedArray',transformedArray);
   setTimeout(() => {
     typeof success === 'function' &&
       success({
-        data: data,
+        data: transformedArray,
         total: tableDataLength,
       });
   }, 500);

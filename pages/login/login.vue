@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       imgUrl:
-        "https://img.kailun.vip/%E5%87%AF%E4%BC%A6%E7%94%B0%E5%9B%AD/%E5%89%AF%E9%A1%B5.png",
+        "https://s2.loli.net/2023/08/07/w4CyUT35QFHd9tI.jpg",
       formData: {
         phone: "17665104674",
         password: "123456",
@@ -146,7 +146,7 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep .uni-icons {
-  color: #8dc26f !important;
+  color: #1ab5ed !important;
 }
 ::v-deep .uni-easyinput__content-input {
   height: 75rpx;
@@ -187,7 +187,7 @@ export default {
 
 .bottonNormal {
   border-radius: 20px;
-  background-color: #8dc26f;
+  background-color: #1ab5ed;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -214,7 +214,7 @@ export default {
   margin-bottom: 80rpx;
 }
 .body {
-  background-color: #8dc26f;
+  background-color: #1ab5ed;
   position: relative;
   z-index: 0; // 支付宝小程序下背景不生效时，可以加上这个
 }

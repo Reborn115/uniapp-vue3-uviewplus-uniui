@@ -24,17 +24,17 @@ const cameraImagePath = ref('');
 
 // 调用接口进行搜索并获取数据
 async function searchContainerData(containerNumber) {
-  const res = await request("/api/yard/get-containerInfoByNumber", "POST", {
+  const res = await request("/api/iot/get-container", "POST", {
         number:containerNumber
       });
-      console.log(res);
+      // console.log('searchContainerData',res);
       if (res.code == "00000") {
-        console.log('containerInfo',res.data);
-        containerInfo.value=res.data
+        // console.log('containerInfo',res.data.containerInfo);
+        containerInfo.value=res.data.containerInfo
         return {containerInfo:res.data}
       } else {
         
-      }
+  }
   
 }
 
@@ -44,13 +44,14 @@ async function onSearch(value) {
   try {
     // 调用接口进行搜索并获取数据
     const data = await searchContainerData(containerNumber.value);
-	  console.log('data',data)
+	  // console.log('data',data)
     // 将数据存储到本地
     uni.setStorageSync('containerData', JSON.stringify(data));
-    console.log('containerData',uni.getStorageSync('containerData'));
+    // console.log('containerData',uni.getStorageSync('containerData'));
     // 跳转至数据展示页面，并将数据作为URL参数传递
+    // console.log('搜索传参',data.containerInfo);
     uni.navigateTo({
-      url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(data)),
+      url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(data.containerInfo)),
     });
   } catch (error) {
     console.error('搜索出错：', error);
@@ -70,8 +71,8 @@ const showCamera = () => {
       const tempFilePaths = res.tempFilePaths;
       // 将图片路径保存到data中
       cameraImagePath.value = tempFilePaths[0];
-      console.log('cameraImagePath', cameraImagePath.value);
-      console.log('uni.getStorageSync("token")',uni.getStorageSync("token"));
+      // console.log('cameraImagePath', cameraImagePath.value);
+      // console.log('uni.getStorageSync("token")',uni.getStorageSync("token"));
       // 上传图片
       uni.uploadFile({
         url: 'https://cs.api.yuleng.top/api/iot/detect',
@@ -82,8 +83,14 @@ const showCamera = () => {
         },
         name: 'file',
         success: (uploadRes) => {
-          console.log('上传成功', uploadRes);
+          // console.log('上传成功', JSON.parse(uploadRes.data));
+          const containerInfo=JSON.parse(uploadRes.data).data
+          // console.log('containerInfo',containerInfo);
+          // console.log('拍照传参',containerInfo);
           // 处理上传成功后的逻辑
+          uni.navigateTo({
+            url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(containerInfo)),
+          });
         },
         fail: (uploadError) => {
           console.error('上传失败：', uploadError);
