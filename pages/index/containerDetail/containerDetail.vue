@@ -92,16 +92,22 @@ const selectedIndexs = ref([]);
 const dataParam = ref('');
 
 onMounted(() => {
-  const pages = getCurrentPages();
-  const currentPage = pages[pages.length - 1];
-  const query = currentPage.options;
-  if (query.data) {
+  // const pages = getCurrentPages();
+  // const currentPage = pages[pages.length - 1];
+  // const query = currentPage.options;
+  // console.log('currentPage.options',currentPage.options);
+  // if (query.data) {
     // 解码并解析传递的数据
-    dataParam.value = JSON.parse(decodeURIComponent(query.data));
+    dataParam.value = uni.getStorageSync("containerData");
+    //清空containerData
+    uni.setStorageSync('containerData', '');
     const containerInfo=dataParam.value.containerInfo;
     // console.log('dataParam.value.containerOperations',dataParam.value.containerOperations);
     // console.log('containerInfo',containerInfo);
-    containerBreakage.value=containerInfo.damage;
+    if(containerInfo.damage){
+      containerBreakage.value=containerInfo.damage;
+    }
+    
     containerNumber.value=containerInfo.number;
     containerOwner.value=containerInfo.owner;
     containerState.value=containerInfo.status;
@@ -109,7 +115,7 @@ onMounted(() => {
     containerMaximumLoad.value=containerInfo.bearing;
     containerOther.value=containerInfo.other;
     containerTare.value=containerInfo.weight;//Todo:确认是否为weight字段
-  }
+  // }
   getData(1);
 });
 
