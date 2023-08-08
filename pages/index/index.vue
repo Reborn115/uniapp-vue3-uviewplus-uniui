@@ -1,4 +1,5 @@
 <template>
+  <u-toast ref="uToast"></u-toast>
   <view class="container">
     <view class="bell-icon">
       <view style="width:80vw"></view>
@@ -17,6 +18,7 @@
 <script>
 import request from "@/request/request.js";
 import { ref } from 'vue';
+import { getCurrentInstance } from 'vue'
 
 export default {
   data(){
@@ -25,10 +27,21 @@ export default {
   methods: {
   },
   setup() {
+    const instance= getCurrentInstance();
     const containerNumber = ref('EITU178639');
     const containerInfo=ref('');
     const cameraImagePath = ref('');
-
+    function showToast(params) {
+      instance.proxy.$refs.uToast.show({
+        ...params,
+        complete() {
+          params.url &&
+            uni.navigateTo({
+              url: params.url,
+            });
+        },
+      });
+    }
     // 调用接口进行搜索并获取数据
     async function searchContainerData(containerNumber) {
       const res = await request("/api/iot/get-container", "POST", {
@@ -38,7 +51,10 @@ export default {
         containerInfo.value=res.data.containerInfo
         return {containerInfo:res.data}
       } else {
-        
+        showToast({
+          type: "error",
+          message: res.message,
+        });
       }
     }
 
@@ -50,16 +66,27 @@ export default {
         const data = await searchContainerData(containerNumber.value);
 
         // 将数据存储到本地
-        uni.setStorageSync('containerData', data.containerInfo);
-
-        // 跳转至数据展示页面，并将数据作为URL参数传递
-        console.log('搜索传参',data.containerInfo);
-        console.log('搜索存参',uni.getStorageSync("containerData"));
-        uni.navigateTo({
-          url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(data.containerInfo)),
-        });
+        
+        if(data.containerInfo){
+          uni.setStorageSync('containerData', data.containerInfo);
+          // 跳转至数据展示页面，并将数据作为URL参数传递
+          // console.log('搜索传参',data.containerInfo);
+          // console.log('搜索存参',uni.getStorageSync("containerData"));
+          showToast({
+            type: "success",
+            message: '搜索成功',
+            url: '/pages/index/containerDetail/containerDetail',
+          });
+        }
+        // uni.navigateTo({
+        //   url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(data.containerInfo)),
+        // });
       } catch (error) {
         console.error('搜索出错：', error);
+        showToast({
+          type: "error",
+          message: data.message,
+        });
       }
     }
 
@@ -91,12 +118,19 @@ export default {
                 const containerInfo=JSON.parse(uploadRes.data).data
                 uni.setStorageSync('containerData', containerInfo);
                 console.log('拍照传参',containerInfo);
-
-                uni.navigateTo({
-                  url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(containerInfo)),
+                showToast({
+                  type: "success",
+                  message: '识别成功',
+                  url: '/pages/index/containerDetail/containerDetail',
                 });
+                // uni.navigateTo({
+                //   url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(containerInfo)),
+                // });
               } else{
-                console.log('上传成功',res.message);
+                showToast({
+                  type: "error",
+                  message: JSON.parse(uploadRes.data).message,
+                });
               }
             },
             fail: (uploadError) => {
