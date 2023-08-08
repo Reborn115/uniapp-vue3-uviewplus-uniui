@@ -1,11 +1,7 @@
-// const BASE_URL = "http://43.143.162.177:11500";
-// const BASE_URL = "https://www.haorui.xyz";
 const BASE_URL = "https://cs.api.yuleng.top";
 
 const request = (url, method, data, header = {},requestType) => {
-  return new Promise((resolve, reject) => {
-    console.log("token", uni.getStorageSync("token"));
-    console.log(uni.getStorageSync("token"));
+  return new Promise((resolve, reject) => {    
     if ( url != "/api/login/b") {
       if (!uni.getStorageSync("token")) {
         uni.navigateTo({
