@@ -1,4 +1,5 @@
 <template>
+  <u-toast ref="uToast"></u-toast>
   <view class="container">
     <view class="bell-icon">
       <view style="width:80vw"></view>
@@ -14,98 +15,147 @@
   </view>
 </template>
 
-<script setup>
+<script>
 import request from "@/request/request.js";
 import { ref } from 'vue';
+import { getCurrentInstance } from 'vue'
 
-const containerNumber = ref('EITU178639');
-const containerInfo=ref('');
-const cameraImagePath = ref('');
-
-// 调用接口进行搜索并获取数据
-async function searchContainerData(containerNumber) {
-  const res = await request("/api/iot/get-container", "POST", {
+export default {
+  data(){
+    return{}
+  },
+  methods: {
+  },
+  setup() {
+    const instance= getCurrentInstance();
+    const containerNumber = ref('EITU178639');
+    const containerInfo=ref('');
+    const cameraImagePath = ref('');
+    function showToast(params) {
+      instance.proxy.$refs.uToast.show({
+        ...params,
+        complete() {
+          params.url &&
+            uni.navigateTo({
+              url: params.url,
+            });
+        },
+      });
+    }
+    // 调用接口进行搜索并获取数据
+    async function searchContainerData(containerNumber) {
+      const res = await request("/api/iot/get-container", "POST", {
         number:containerNumber
       });
-      // console.log('searchContainerData',res);
       if (res.code == "00000") {
-        // console.log('containerInfo',res.data.containerInfo);
         containerInfo.value=res.data.containerInfo
         return {containerInfo:res.data}
       } else {
+        showToast({
+          type: "error",
+          message: res.message,
+        });
+      }
+    }
+
+    // 当点击搜索或回车
+    async function onSearch(value) {
+      console.log(value);
+      try {
+        // 调用接口进行搜索并获取数据
+        const data = await searchContainerData(containerNumber.value);
+
+        // 将数据存储到本地
         
-  }
-  
-}
+        if(data.containerInfo){
+          uni.setStorageSync('containerData', data.containerInfo);
+          // 跳转至数据展示页面，并将数据作为URL参数传递
+          // console.log('搜索传参',data.containerInfo);
+          // console.log('搜索存参',uni.getStorageSync("containerData"));
+          showToast({
+            type: "success",
+            message: '搜索成功',
+            url: '/pages/index/containerDetail/containerDetail',
+          });
+        }
+        // uni.navigateTo({
+        //   url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(data.containerInfo)),
+        // });
+      } catch (error) {
+        console.error('搜索出错：', error);
+        showToast({
+          type: "error",
+          message: data.message,
+        });
+      }
+    }
 
-// 当点击搜索或回车
-async function onSearch(value) {
-  console.log(value);
-  try {
-    // 调用接口进行搜索并获取数据
-    const data = await searchContainerData(containerNumber.value);
-	  // console.log('data',data)
-    // 将数据存储到本地
-    uni.setStorageSync('containerData', JSON.stringify(data));
-    // console.log('containerData',uni.getStorageSync('containerData'));
-    // 跳转至数据展示页面，并将数据作为URL参数传递
-    // console.log('搜索传参',data.containerInfo);
-    uni.navigateTo({
-      url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(data.containerInfo)),
-    });
-  } catch (error) {
-    console.error('搜索出错：', error);
-  }
-}
+    function onContainerNumberChange(value) {
+      console.log(value);
+    }
 
-function onContainerNumberChange(value) {
-  console.log(value);
-}
+    const showCamera = () => {
+      uni.chooseImage({
+        count: 1,
+        sizeType: ['compressed'],
+        success: (res) => {
+          const tempFilePaths = res.tempFilePaths;
+          cameraImagePath.value = tempFilePaths[0];
+          console.log('cameraImagePath', cameraImagePath.value);
 
-const showCamera = () => {
-  uni.chooseImage({
-    count: 1,
-    sourceType: ['camera'],
-    success: (res) => {
-      // 处理拍照成功后的逻辑
-      const tempFilePaths = res.tempFilePaths;
-      // 将图片路径保存到data中
-      cameraImagePath.value = tempFilePaths[0];
-      // console.log('cameraImagePath', cameraImagePath.value);
-      // console.log('uni.getStorageSync("token")',uni.getStorageSync("token"));
-      // 上传图片
-      uni.uploadFile({
-        url: 'https://cs.api.yuleng.top/api/iot/detect',
-        filePath: res.tempFilePaths[0],
-        header:{
-          "Content-Type": "application/json", // 默认请求头
-          Authorization: "Bearer " + uni.getStorageSync("token")
-        },
-        name: 'file',
-        success: (uploadRes) => {
-          // console.log('上传成功', JSON.parse(uploadRes.data));
-          const containerInfo=JSON.parse(uploadRes.data).data
-          // console.log('containerInfo',containerInfo);
-          // console.log('拍照传参',containerInfo);
-          // 处理上传成功后的逻辑
-          uni.navigateTo({
-            url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(containerInfo)),
+          uni.uploadFile({
+            url: 'https://cs.api.yuleng.top/api/iot/detect',
+            filePath: res.tempFilePaths[0],
+            header:{
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + uni.getStorageSync("token")
+            },
+            name: 'file',
+            success: (uploadRes) => {
+              const res=JSON.parse(uploadRes.data);
+              if(res.code=='00000'){
+                console.log('上传成功', JSON.parse(uploadRes.data));
+                const containerInfo=JSON.parse(uploadRes.data).data
+                uni.setStorageSync('containerData', containerInfo);
+                console.log('拍照传参',containerInfo);
+                showToast({
+                  type: "success",
+                  message: '识别成功',
+                  url: '/pages/index/containerDetail/containerDetail',
+                });
+                // uni.navigateTo({
+                //   url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(containerInfo)),
+                // });
+              } else{
+                showToast({
+                  type: "error",
+                  message: JSON.parse(uploadRes.data).message,
+                });
+              }
+            },
+            fail: (uploadError) => {
+              console.error('上传失败：', uploadError);
+            }
           });
         },
-        fail: (uploadError) => {
-          console.error('上传失败：', uploadError);
-          // 处理上传失败后的逻辑
-        }
+        fail: (error) => {
+          console.error('拍照失败：', error);
+        },
       });
-    },
-    fail: (error) => {
-      console.error('拍照失败：', error);
-    },
-  });
-};
+    };
 
-
+    return {
+      containerNumber,
+      containerInfo,
+      cameraImagePath,
+      onSearch,
+      onContainerNumberChange,
+      showCamera
+    };
+  }
+}
 </script>
+
 
 <style lang="scss" scoped>
 .search-bar{
