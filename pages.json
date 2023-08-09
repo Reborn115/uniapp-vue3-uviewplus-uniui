@@ -57,7 +57,42 @@
                 "enablePullDownRefresh": false
             }
             
+        } ,{
+            "path" : "pages/containerManagement/containerManagement",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "堆场管理",
+                "enablePullDownRefresh": false
+            }
+            
+        },{
+            "path" : "pages/containerManagement/anlist/anlist",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "数据统计",
+                "enablePullDownRefresh": false
+            }
+            
         }
+        ,{
+            "path" : "pages/containerManagement/error/error",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "异常",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/containerManagement/contanPage/contanPage",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -77,16 +112,16 @@
 				"text": "主页"
 			},
 			{
+				"pagePath": "pages/containerManagement/containerManagement",
+				"iconPath": "static/message1.png",
+				"selectedIconPath": "static/message2.png",
+				"text": "堆场管理"
+			},
+			{
 				"pagePath": "pages/pollutionMonitor/pollutionMonitor",
 				"iconPath": "static/message1.png",
 				"selectedIconPath": "static/message2.png",
 				"text": "污染检测"
-			},
-			{
-				"pagePath": "pages/message/message",
-				"iconPath": "static/message1.png",
-				"selectedIconPath": "static/message2.png",
-				"text": "消息"
 			},
 			{
 				"pagePath": "pages/mine/mine",
