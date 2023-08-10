@@ -9,25 +9,16 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "ContainerManager",
+				"navigationBarTitleText": "主页",
 				"navigationBarTextStyle": "black",
 				"navigationBarBackgroundColor": "#ffffff",
 				"enablePullDownRefresh": false
 			}
-		},
-		{
-			"path": "pages/message/message",
-			"style": {
-				"navigationBarTitleText": "ContainerManager",
-				"navigationBarTextStyle": "black",
-				"navigationBarBackgroundColor": "#ffffff",
-				"enablePullDownRefresh": false
-			}
-		},
+		},		
 		{
 			"path": "pages/mine/mine",
 			"style": {
-				"navigationBarTitleText": "ContainerManager",
+				"navigationBarTitleText": "我的",
 				"navigationBarTextStyle": "black",
 				"navigationBarBackgroundColor": "#ffffff",
 				"enablePullDownRefresh": false
