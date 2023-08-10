@@ -298,8 +298,8 @@ onShow(async()=>{
 	try{
 		const res = await a();
 		if (res.code == "00000") {
+			  await clearColor(res.data.containerInfoList);
 		      await processData(res.data.containerInfoList);
-			  // console.log(res.data);
 		    } else {
 		}
 		
@@ -307,6 +307,42 @@ onShow(async()=>{
 		console.error('请求出错：', error);
 	}
 })
+//清空方块颜色
+async function clearColor(res){
+	try{
+		for(let i = 0;i < res.length;i++){
+			let position = res[i].position;
+			let area = position[0];
+			let index = position[1];
+			let layer = position.substring(3,4);
+			let x = position.substring(5,6);
+			let y = position.substring(7);
+			let list_index = 16*(index-1)+(y-1)*4+(x-1+1)-1;
+			if(layer == 1){
+				switch(area){
+					case 'A':
+						colorList1.value[list_index] = '#fff';
+						break;
+					case 'B':
+						colorList2.value[list_index] = '#fff';
+						break;
+					case 'C':
+						colorList3.value[list_index] = '#fff';
+						break;
+					case 'D':
+						colorList4.value[list_index] = '#fff';
+						break;
+					case 'E':
+						colorList5.value[list_index] = '#fff';
+						break;
+				}
+			}
+		}
+	}catch(error){
+		console.log('---',error);
+	}
+	
+}
 //处理集装箱数据
 async function processData(res){
 	try{
@@ -321,19 +357,19 @@ async function processData(res){
 			if(layer == 1 && res[i].status === '堆场中'){
 				switch(area){
 					case 'A':
-						colorList1.value[list_index] = getColor(res[i].owner);
+						colorList1.value[list_index] = await getColor(res[i].owner);
 						break;
 					case 'B':
-						colorList2.value[list_index] = getColor(res[i].owner);
+						colorList2.value[list_index] = await getColor(res[i].owner);
 						break;
 					case 'C':
-						colorList3.value[list_index] = getColor(res[i].owner);
+						colorList3.value[list_index] = await getColor(res[i].owner);
 						break;
 					case 'D':
-						colorList4.value[list_index] = getColor(res[i].owner);
+						colorList4.value[list_index] = await getColor(res[i].owner);
 						break;
 					case 'E':
-						colorList5.value[list_index] = getColor(res[i].owner);
+						colorList5.value[list_index] = await getColor(res[i].owner);
 						break;
 				}
 			}
@@ -344,20 +380,24 @@ async function processData(res){
 	
 }
 //姓名获取颜色
-function getColor(name) {
-  let sum = 0;
-    for (let i = 0; i < name.length; i++) {
-      sum += name.charCodeAt(i);
-    }
-  
-    // 生成颜色的 RGB 值
-    const red = (sum * 73) % 256;
-    const green = (sum * 113) % 256;
-    const blue = (sum * 163) % 256;
-  
-    // 将 RGB 值转换为颜色字符串
-    const color = "#" + toHex(red) + toHex(green) + toHex(blue);
-    return color;
+async function getColor(name) {
+	try{
+		let sum = 0;
+		  for (let i = 0; i < name.length; i++) {
+		    sum += name.charCodeAt(i);
+		  }
+		
+		  // 生成颜色的 RGB 值
+		  const red = (sum * 73) % 256;
+		  const green = (sum * 113) % 256;
+		  const blue = (sum * 163) % 256;
+		
+		  // 将 RGB 值转换为颜色字符串
+		  const color = "#" + toHex(red) + toHex(green) + toHex(blue);
+		  return color;
+	}catch(error){
+		console.log('---',error);
+	}
 }
 // 辅助函数，将数值转换为两位十六进制字符串
 function toHex(value) {

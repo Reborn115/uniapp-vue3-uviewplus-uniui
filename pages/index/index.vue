@@ -1,175 +1,145 @@
 <template>
-  <u-toast ref="uToast"></u-toast>
-  <view class="container">
-    <view class="bell-icon">
-      <view style="width:80vw"></view>
-      <u-icon name="bell" color="#535353" size="40"></u-icon>
-    </view>
-    <view class="camera-icon" @click="showCamera">
-      <u-icon name="camera" color="#efefef" size="200"></u-icon>
-    </view>
-    <view class="search-bar">
-      <u-search shape="round" :show-action="false" :clearabled="true" v-model="containerNumber" placeholder="请输入集装箱箱号" @change="onContainerNumberChange" @search="onSearch" @custom="onSearch">
-      </u-search>
-    </view>
-  </view>
+  <u-toast ref="uToast" />
+  <div class="container">
+    <div class="bell-icon">
+      <div style="width: 80vw"></div>
+      <u-icon name="bell" color="#535353" size="40" />
+    </div>
+    <div class="camera-icon" @click="showCamera">
+      <u-icon name="camera" color="#efefef" size="200" />
+    </div>
+    <div class="search-bar">
+      <u-search
+        shape="round"
+        :show-action="false"
+        :clearable="true"
+        v-model="containerNumber"
+        placeholder="请输入集装箱箱号"
+        @change="onContainerNumberChange"
+        @search="performSearch"
+        @custom="performSearch"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
-import request from "@/request/request.js";
 import { ref } from 'vue';
-import { getCurrentInstance } from 'vue'
+import { getCurrentInstance } from 'vue';
+import request from '@/request/request.js';
 
 export default {
-  data(){
-    return{}
-  },
-  methods: {
-  },
   setup() {
-    const instance= getCurrentInstance();
+    const instance = getCurrentInstance();
     const containerNumber = ref('EITU178639');
-    const containerInfo=ref('');
     const cameraImagePath = ref('');
-    function showToast(params) {
+
+    const showToast = (params) => {
       instance.proxy.$refs.uToast.show({
         ...params,
         complete() {
-          params.url &&
+          if (params.url) {
             uni.navigateTo({
               url: params.url,
             });
+          }
         },
       });
-    }
-    // 调用接口进行搜索并获取数据
-    async function searchContainerData(containerNumber) {
-      const res = await request("/api/iot/get-container", "POST", {
-        number:containerNumber
-      });
-      if (res.code == "00000") {
-        containerInfo.value=res.data.containerInfo
-        return {containerInfo:res.data}
-      } else {
-        showToast({
-          type: "error",
-          message: res.message,
-        });
-      }
-    }
+    };
 
-    // 当点击搜索或回车
-    async function onSearch(value) {
-      console.log(value);
+    const performSearch = async (value) => {
       try {
-        // 调用接口进行搜索并获取数据
-        const data = await searchContainerData(containerNumber.value);
-
-        // 将数据存储到本地
-        
-        if(data.containerInfo){
-          uni.setStorageSync('containerData', data.containerInfo);
-          // 跳转至数据展示页面，并将数据作为URL参数传递
-          // console.log('搜索传参',data.containerInfo);
-          // console.log('搜索存参',uni.getStorageSync("containerData"));
+        const res = await request('/api/iot/get-container', 'POST', { number: value });
+        if (res.code === '00000') {
+          console.log(res.data);
+          uni.setStorageSync('containerData', res.data);
           showToast({
-            type: "success",
+            type: 'success',
             message: '搜索成功',
             url: '/pages/index/containerDetail/containerDetail',
           });
+        } else {
+          throw new Error(res.message);
         }
-        // uni.navigateTo({
-        //   url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(data.containerInfo)),
-        // });
       } catch (error) {
         console.error('搜索出错：', error);
         showToast({
-          type: "error",
-          message: data.message,
+          type: 'error',
+          message: error.message,
         });
       }
-    }
+    };
 
-    function onContainerNumberChange(value) {
+    const onContainerNumberChange = (value) => {
       console.log(value);
-    }
+      containerNumber.value=value;
+    };
 
-    const showCamera = () => {
-      uni.chooseImage({
-        count: 1,
-        sizeType: ['compressed'],
-        success: (res) => {
-          const tempFilePaths = res.tempFilePaths;
-          cameraImagePath.value = tempFilePaths[0];
-          console.log('cameraImagePath', cameraImagePath.value);
+    const showCamera = async () => {
+      try {
+        const res = await uni.chooseImage({
+          count: 1,
+          sizeType: ['compressed'],
+        });
+        const tempFilePaths = res.tempFilePaths;
+        cameraImagePath.value = tempFilePaths[0];
 
-          uni.uploadFile({
-            url: 'https://cs.api.yuleng.top/api/iot/detect',
-            filePath: res.tempFilePaths[0],
-            header:{
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + uni.getStorageSync("token")
-            },
-            name: 'file',
-            success: (uploadRes) => {
-              const res=JSON.parse(uploadRes.data);
-              if(res.code=='00000'){
-                console.log('上传成功', JSON.parse(uploadRes.data));
-                const containerInfo=JSON.parse(uploadRes.data).data
-                uni.setStorageSync('containerData', containerInfo);
-                console.log('拍照传参',containerInfo);
-                showToast({
-                  type: "success",
-                  message: '识别成功',
-                  url: '/pages/index/containerDetail/containerDetail',
-                });
-                // uni.navigateTo({
-                //   url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(containerInfo)),
-                // });
-              } else{
-                showToast({
-                  type: "error",
-                  message: JSON.parse(uploadRes.data).message,
-                });
-              }
-            },
-            fail: (uploadError) => {
-              console.error('上传失败：', uploadError);
-            }
+        const uploadRes = await uni.uploadFile({
+          url: 'https://cs.api.yuleng.top/api/iot/detect',
+          filePath: res.tempFilePaths[0],
+          header: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + uni.getStorageSync('token'),
+          },
+          name: 'file',
+        });
+
+        const parsedUploadRes = JSON.parse(uploadRes.data);
+        if (parsedUploadRes.code === '00000') {
+          const containerData = parsedUploadRes.data;
+          uni.setStorageSync('containerData', containerData);
+          showToast({
+            type: 'success',
+            message: '识别成功',
+            url: '/pages/index/containerDetail/containerDetail',
           });
-        },
-        fail: (error) => {
-          console.error('拍照失败：', error);
-        },
-      });
+        } else {
+          showToast({
+            type: 'error',
+            message: parsedUploadRes.message,
+          });
+        }
+      } catch (error) {
+        console.error('拍照失败：', error);
+      }
     };
 
     return {
       containerNumber,
-      containerInfo,
       cameraImagePath,
-      onSearch,
+      performSearch,
       onContainerNumberChange,
-      showCamera
+      showCamera,
     };
-  }
-}
+  },
+};
 </script>
 
-
 <style lang="scss" scoped>
-.search-bar{
+.search-bar {
   width: 90vw;
   height: 20vh;
   display: flex;
 }
-.bell-icon{
+
+.bell-icon {
   display: flex;
   justify-content: space-around;
   height: 5vh;
   align-items: center;
 }
-.camera-icon{
+
+.camera-icon {
   height: 50vh;
   width: 85vw;
   background-color: #003664;
@@ -178,7 +148,8 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.container{
+
+.container {
   height: 100vh;
   width: 100vw;
   display: flex;

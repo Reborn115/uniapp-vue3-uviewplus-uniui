@@ -52,9 +52,8 @@
 						<view style="font-size: 15px; font-weight: bold;color:#aeaeae;margin-top: 1vh;">国家：{{ country }}</view>
 						<view style="font-size: 15px; font-weight: bold;color:#aeaeae;margin-top: 1vh;">货物：{{ cargo }}</view>
 						<view style="font-size: 15px; font-weight: bold;color:#aeaeae;margin-top: 1vh;">重量：{{ weight }}</view>
-						<view style="font-size: 15px; font-weight: bold;color:#aeaeae;margin-top: 1vh;">承重：{{ bearing }}</view>
-						<view style="font-size: 15px; font-weight: bold;color:#aeaeae;margin-top: 1vh;">进场时间：{{ plannedArrival }}</view>
-						<view style="font-size: 15px; font-weight: bold;color:#aeaeae;margin-top: 1vh;">出场时间：{{ plannedLeave }}</view>
+						<view style="font-size: 15px; font-weight: bold;color:#aeaeae;margin-top: 1vh;">进场日期：{{ plannedArrival.substring(0,10) }}</view>
+						<view style="font-size: 15px; font-weight: bold;color:#aeaeae;margin-top: 1vh;">进场时间：{{ plannedArrival.substring(11,19) }}</view>
 						<image :src="imgSrc" style="margin-top: 3vh;max-width: 70vw;" mode="aspectFit"></image>
 					</view>
 				</scroll-view>
@@ -77,15 +76,10 @@
 					<input style="border-bottom:1px solid #dadbde;margin-top: 3vh;" placeholder="输入箱型" v-model="add_type"/>
 					<input style="border-bottom:1px solid #dadbde;margin-top: 3vh;" placeholder="输入重量" v-model="add_weight"/>
 					<input style="border-bottom:1px solid #dadbde;margin-top: 3vh;" placeholder="输入货物" v-model="add_cargo"/>
-					<input style="border-bottom:1px solid #dadbde;margin-top: 3vh;" placeholder="输入承重" v-model="add_bearing"/>
 					<input style="border-bottom:1px solid #dadbde;margin-top: 3vh;" placeholder="输入国家" v-model="add_country"/>
 					<view style="font-size: 15px;color:#979797;margin-top: 3vh;">进场时间:</view>
 					<view class="example-body">
 						<uni-datetime-picker type="datetime" v-model="add_plannedArrival" @change="changeLog" />
-					</view>
-					<view style="font-size: 15px;color:#979797;margin-top: 3vh;">出场时间:</view>
-					<view class="example-body">
-						<uni-datetime-picker type="datetime" v-model="add_plannedLeave" @change="changeLog" />
 					</view>
 					<view style="display: flex;flex-direction: column;justify-content: center;align-items: center;margin-top: 2vh;">
 						<view class="camera" @click="takePhoto">
@@ -106,6 +100,7 @@
 
 <script setup>
 import request from "@/request/request.js";
+import { onShow } from "@dcloudio/uni-app"
 import {onMounted,ref,defineProps, watch,onUpdated, reactive} from 'vue';
 const number = ref('');
 const imagePath = ref('');
@@ -172,6 +167,13 @@ onMounted( async()=>{
 		if(receiveArea.value[0] =='E'){
 			receive.value = '其他'+receiveArea.value[1]
 		}
+	}catch(error){
+		console.error('请求出错：', error);
+	}
+})
+onShow(async()=>{
+	try{
+		console.log('onShow')
 	}catch(error){
 		console.error('请求出错：', error);
 	}
@@ -337,24 +339,24 @@ async function info_open(end_position) {
 	try{
 		nowPosition.value = receiveArea.value+end_position;
 		if(end_position){
-			console.log(nowPosition.value);
 			const res = await request("/api/yard/get-containerInfoByPosition", "POST", {position:nowPosition.value});
 			if (res.code == "00000" && res.data && res.data.status == '堆场中') {
 				number.value = res.data.containerId;
 				containerId.value = res.data.number;
 				owner.value = res.data.owner;
 				status.value = res.data.status;
-				position.value = res.data.position[1]+'-'+res.data.position[5]+'0'+res.data.position[7];
+				position.value = res.data.position[1]+'-'+res.data.position[3]+'-'+res.data.position[5]+'0'+res.data.position[7];
 				type.value = res.data.type;
 				weight.value = res.data.weight+'kg';
 				bearing.value = res.data.bearing+'kg';
 				imgSrc.value = res.data.picUrl;
 				country.value = res.data.country;
 				cargo.value = res.data.cargo;
-				plannedArrival.value = res.data.plannedArrival;
+				plannedArrival.value = res.data.plannedArrival.substring(0,10)+' '+res.data.plannedArrival.substring(11,19,);
 				plannedLeave.value = res.data.plannedLeave;
 				info_show.value = true;
 			}
+			console.log('展示函数position',nowPosition.value);
 		}
 	}catch(error) {
     console.error('集装箱信息失败：', error);
@@ -362,6 +364,7 @@ async function info_open(end_position) {
 }
 function info_close() {
   info_show.value = false
+  console.log('关闭')
   // console.log('close');
 }
 async function enter(){
@@ -376,14 +379,16 @@ async function enter(){
 				  position:add_position.value,
 				  cargo:add_cargo.value,
 				  country:add_country.value,
-				  plannedArrival:add_plannedArrival.value,
-				  plannedLeave:add_plannedLeave.value
+				  plannedArrival:add_plannedArrival.value.substring(0,10)+'T'+add_plannedArrival.value.substring(11,19)+'.000+00:00',
+				  plannedLeave:'2023-01-01T00:00:00.000+00:00'
 		});
 		if(res.code == '00000'&& res.message == '请求正常'){
 			return res;
+		}else if(res.code == 'A0400' && res.message == '此箱号已存在，不能进行新增操作'){
+			return res;
 		}
 	}catch (error) {
-    console.error('入库失败：', error);
+    console.error('入库失败1：', error);
   }
 }
 
@@ -419,7 +424,8 @@ async function enterCont() {
 				  add_cargo.value = '';
 				  add_plannedArrival.value = '';
 				  add_plannedLeave.value = '';
-			}else if(res.code == 'A0400' && res.message == '此箱号已存在，不能进行新增操作'){
+			}
+			else if(res.code == 'A0400' && res.message == '此箱号已存在，不能进行新增操作'){
 				for(let i =0;i<resData.value.length;i++){
 					if(add_containerId.value = resData.value[i].number && resData.value[i].status != '堆场中'){
 						const res = await request("/api/yard/operation-container/", "POST", {containerId:resData.value[i].containerId,operationType:'入库',location:resData.value[i].position});
@@ -435,22 +441,36 @@ async function enterCont() {
 								  colorList2.value[list_index] = getColor(add_owner.value);
 						}
 						add_show.value = false;
+						add_show.value = false;
+						add_containerId.value = '';
+						add_owner.value = '';
+						add_status.value = '';
+						add_position.value = '';
+						add_type.value = '';
+						add_weight.value = '';
+						add_bearing.value = '';
+						add_imgSrc.value ='';
+						add_country.value = '';
+						add_cargo.value = '';
+						add_plannedArrival.value = '';
+						add_plannedLeave.value = '';
 						break;
 					}
 				}
 				// 
+			}else{
+				console.log('入库失败');
 			}
 	  // }
 
 	  
   } catch (error) {
-    console.error('入库失败：', error);
+    console.error('入库失败2：', error);
   }
 }
 async function out(){
 	try{
 		const res = await request("/api/yard/operation-container/", "POST", {containerId:number.value,operationType:'出库',location:nowPosition.value});
-		console.log('出库res',res);
 		if(res.code == '00000'&& res.message == '请求正常'){
 			return res;
 		}
@@ -463,22 +483,18 @@ async function outCont() {
   try{
 	  const res = await out()
 	  if(res){
-		  //例子:c1010203,为c区第一堆第一层横坐标2纵坐标3
-		  let area = nowPosition.value[0];
-		  let index = nowPosition.value[1];//第几堆
-		  let layer = nowPosition.value.substring(3,4);
-		  let x = nowPosition.value.substring(5,6);
-		  let y = nowPosition.value.substring(7);
-		  let list_index = (y-1)*4+(x-1+1)-1;
-		  if(layer == '1'){
-		  		  colorList1.value[list_index] = '#fff';
-		  }else{
-		  		  colorList2.value[list_index] = '#fff';
-		  }
-		  info_show.value = false;
+	  //position.value为4-1-301,即堆场-层-横坐标＋纵坐标
+	  let layer = position.value[2];
+	  let x = position.value[4];
+	  let y = position.value[6];
+	  let list_index = (y-1)*4+(x-1+1)-1;
+	  if(layer == '1'){
+	  		  colorList1.value[list_index] = '#fff';
+	  }else{
+	  		  colorList2.value[list_index] = '#fff';
 	  }
-	  // console.log('res',nowPosition.value);
-
+	  info_show.value = false;
+	  }
   } catch (error) {
     console.error('出库失败：', error);
   }
@@ -536,13 +552,6 @@ async function toAbnormity() {
 //跳转至统计界面
 async function toAnalist() {
   try {
-   //  // 调用接口进行搜索并获取数据
-   //  const data = await searchContainerData(containerNumber.value);
-	  // console.log('data',data)
-   //  // 将数据存储到本地
-   //  uni.setStorageSync('containerData', JSON.stringify(data));
-   //  console.log('containerData',uni.getStorageSync('containerData'));
-    // 跳转至数据展示页面，并将数据作为URL参数传递
     uni.navigateTo({
       url: '/pages/containerManagement/anlist/anlist',
     });
