@@ -379,7 +379,7 @@ async function enter(){
 				  plannedArrival:add_plannedArrival.value,
 				  plannedLeave:add_plannedLeave.value
 		});
-		if(res.code == '00000'){
+		if(res.code == '00000'&& res.message == '请求正常'){
 			return res;
 		}
 	}catch (error) {
@@ -391,7 +391,8 @@ async function enter(){
 async function enterCont() {
   try{
 		  const res = await enter();
-		  if(res.code == '00000' && res.message == '请求正常'){
+		  console.log('enter res',res);
+		  if(res){
 		  		  //例子:c1010203,为c区第一堆第一层横坐标2纵坐标3
 		  		  let area = add_position.value[0];
 		  		  let index = add_position.value[1];//第几堆
@@ -449,7 +450,8 @@ async function enterCont() {
 async function out(){
 	try{
 		const res = await request("/api/yard/operation-container/", "POST", {containerId:number.value,operationType:'出库',location:nowPosition.value});
-		if(res.code == '00000'){
+		console.log('出库res',res);
+		if(res.code == '00000'&& res.message == '请求正常'){
 			return res;
 		}
 	}catch(error){
@@ -460,7 +462,7 @@ async function out(){
 async function outCont() {
   try{
 	  const res = await out()
-	  if(res.code == '00000' && res.message == '请求正常'){
+	  if(res){
 		  //例子:c1010203,为c区第一堆第一层横坐标2纵坐标3
 		  let area = nowPosition.value[0];
 		  let index = nowPosition.value[1];//第几堆
@@ -475,7 +477,7 @@ async function outCont() {
 		  }
 		  info_show.value = false;
 	  }
-	  console.log('res',nowPosition.value);
+	  // console.log('res',nowPosition.value);
 
   } catch (error) {
     console.error('出库失败：', error);
