@@ -1,16 +1,20 @@
 <template>
-	<view class="container">
-		<view class="navigation">
-			<text class="title">堆场管理</text>
-			<view class="nav-icon">
-				<image src="../../static/error.png" class="icon-error" @click="toAbnormity"></image>
-				<image src="../../static/analist.png" class="icon-anlist" @click="toAnalist"></image>
+	<view class="container" >
+		<view style="position: fixed;background-color: #fff;">
+			<view style="height: 4vh;"></view>
+			<view class="navigation">
+				<text class="title">堆场管理</text>
+				<view class="nav-icon">
+					<image src="../../static/error.png" class="icon-error" @click="toAbnormity"></image>
+					<image src="../../static/analist.png" class="icon-anlist" @click="toAnalist"></image>
+				</view>
+			</view>
+			<view class="search-bar">
+			  <u-search shape="round" :show-action="false" :clearabled="true" v-model="searchText" placeholder="箱号/地址/区域/类型" @change="onContainerNumberChange" @search="onSearch" @custom="onSearch">
+			  </u-search>
 			</view>
 		</view>
-		<view class="search-bar">
-		  <u-search shape="round" :show-action="false" :clearabled="true" v-model="searchText" placeholder="箱号/地址/区域/类型" @change="onContainerNumberChange" @search="onSearch" @custom="onSearch">
-		  </u-search>
-		</view>
+		<view style="height: 1vh;"></view>
 		<view class="area-A area">
 			<view>A区</view>
 			<view class="A-col-1 col-1">
@@ -252,6 +256,7 @@ import request from "@/request/request.js";
 import { onShow } from "@dcloudio/uni-app"
 import { ref,onMounted } from 'vue';
 const searchText = ref('');
+const bar = ref('  ')
 const color = ref('');
 const colorList1 = ref(['#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff'
 						,'#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff'
@@ -464,6 +469,7 @@ function onContainerNumberChange(value) {
 
 <style scoped lang="scss">
 .navigation {
+	
 	display: flex;
 	justify-content: space-between;
 	width: 100vw;
@@ -492,9 +498,12 @@ function onContainerNumberChange(value) {
 
 .search-bar{
   width: 90vw;
-  height: 20vh;
+  height: 10vh;
   margin-top: 4vh;
   margin-left: 5vw;
+}
+.area-A {
+	margin-top: 25vh;
 }
 .area {
 	display: flex;
