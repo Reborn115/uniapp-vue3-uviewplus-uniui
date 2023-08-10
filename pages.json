@@ -48,16 +48,14 @@
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/pollutionMonitor/pollutionMonitor",
+			"style": {
+				"navigationBarTitleText": "污染检测",
+				"enablePullDownRefresh": false
+			}
 		}
-        ,{
-            "path" : "pages/pollutionMonitor/pollutionMonitor",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "污染检测",
-                "enablePullDownRefresh": false
-            }
-            
-        }
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -67,7 +65,7 @@
 	},
 	"tabBar": {
 		"borderStyle": "black",
-		"selectedColor": "#62DFE5",
+		"selectedColor": "#1ab5ed",
 		"color": "#444444",
 		"list": [
 			{

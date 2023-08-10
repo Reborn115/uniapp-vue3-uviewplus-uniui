@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       imgUrl:
-        "https://s2.loli.net/2023/08/07/w4CyUT35QFHd9tI.jpg",
+        "http://cs.file.yuleng.top/avatar/container_logo.jpg",
       formData: {
         phone: "17665104674",
         password: "123456",
@@ -87,7 +87,12 @@ export default {
       },
     };
   },
-  onLoad() {},
+  onLoad() {
+    this.showToast({
+      type: "warning",
+      message: '请先登录解锁更多内容',
+    });
+  },
   methods: {
     showToast(params) {
       this.$refs.uToast.show({
