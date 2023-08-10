@@ -70,6 +70,16 @@ let mockData = {
         ]
     }
 }
+// 截取过长数字小数点后三位
+function formatProp(prop,len=6){
+    let arr =mockData.data.data
+    if(arr[4][prop].toString().length>len){
+        arr.forEach((item)=>{            
+            // item[prop]=item[prop].substring(0,5)//字符串
+            item[prop]=item[prop].toFixed(3)//数字,小数点后3位            
+        })
+    }
+}
 //获取数据
 async function getMonitorData(type=false){
     //监测数据是否是最新的
@@ -81,6 +91,11 @@ async function getMonitorData(type=false){
     }	
     mockData=res //更新公共数据
     uni.setStorage({key:"PMData",data:res.data.lastUpdateTime}) //存储时间戳校验数据时效性
+    formatProp("temperature")
+    formatProp("pm")
+    formatProp("turbidity",15)
+    formatProp("humidity")
+    formatProp("tds")
     if(!type && res.data.lastUpdateTime!=timestamp) renderUpdateData() //分5秒渲染
 }
 //分5秒渲染数据
