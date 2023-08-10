@@ -7,7 +7,7 @@
 	  itemStyle="padding-left: 14vw; padding-right: 14vw; height: 34px;"
 	  @change="change">
 	  </u-tabs>
-	  <view v-if="current == 0">
+	  <view v-show="current == 0">
 		<view>
 			<u-picker :show="show" :columns="columns"></u-picker>
 			<view style="width: 80vw;margin-top: 5vh;margin-bottom: 2vh;margin-left: 3vw;">
@@ -23,7 +23,7 @@
 		</view>
 		<canvas canvas-id="hsZsWpcOlypNpamdKsjVxGBADvXyMJB" id="hsZsWpcOlypNpamdKsjVxGBADvXyMJB" class="charts1" @touchend="tap"/>
 	  </view>
-	  <view v-if="current == 1">
+	  <view v-show="current == 1">
 		<view>
 			<u-picker :show="show" :columns="columns"></u-picker>
 			<view style="width: 80vw;margin-top: 5vh;margin-bottom: 2vh;margin-left: 3vw;">
@@ -34,7 +34,7 @@
 				  ></uni-data-select>
 			</view>
 		</view>
-		<canvas canvas-id="hsZsWpcOlypNpamdKsjVxGBADvXyMJBc" id="hsZsWpcOlypNpamdKsjVxGBADvXyMJBc" class="charts2" @touchend="tap"/>
+		<canvas  canvas-id="hsZsWpcOlypNpamdKsjVxGBADvXyMJBc" id="hsZsWpcOlypNpamdKsjVxGBADvXyMJBc" class="charts2" @touchend="tap"/>
 	  </view>
 	</view>
 </template>
@@ -610,7 +610,7 @@ function change(index) {
 canvas {
 	width: 100vw;
 	height: 80vh;
-    margin-top: 15vh;
+	margin-top: 15vh;
 }
 
 </style>
