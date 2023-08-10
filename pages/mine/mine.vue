@@ -43,7 +43,7 @@ function jumpPage() {
 			</view>
 			<view class="info-wrap">
 				<view class="profile-name">{{ state.data.name }}</view>
-				<view class="iconfont icon-xiugaixinxi" @click="jumpPage">修改个人信息</view>
+				<view class="iconfont icon-xiugai" @click="jumpPage">修改个人信息</view>
 			</view>			
 		</view>
 
@@ -56,19 +56,21 @@ function jumpPage() {
 				<view class="wrap"><text>年龄</text><text>{{ state.data.age }}</text></view>
 				<view class="wrap"><text>地址</text><text>{{ state.data.address }}</text></view>
 			</view>
-			<navigator class="wrap wrap1" url="#" open-type="navigate">
+			<!-- <navigator class="wrap wrap1" url="#" open-type="navigate">
 				<text>意见反馈</text>
 				<u-icon name="arrow-right" color="#2979ff" size="24"></u-icon>
 			</navigator>
 			<navigator class="wrap" url="#">
 				<text>关于我们</text>
 				<u-icon name="arrow-right" color="#2979ff" size="24"></u-icon>
-			</navigator>
+			</navigator> -->
 		</view>
 	</view>
 </template>
     
 <style lang="less">
+@import url('../../static/font_207c6njydjk/iconfont.css');
+
 page {
 	background: #f8f8f8;
 	letter-spacing: 1px;
@@ -133,25 +135,5 @@ page {
 	.wrap1 {
 		border-bottom: 1rpx solid rgb(143, 149, 158);
 	}
-}
-
-@font-face {
-	font-family: "iconfont";
-	/* Project id 2708397 */
-	src: url("//at.alicdn.com/t/font_2708397_qf7yd08vjus.woff2?t=1627660738142") format("woff2"),
-		url("//at.alicdn.com/t/font_2708397_qf7yd08vjus.woff?t=1627660738142") format("woff"),
-		url("//at.alicdn.com/t/font_2708397_qf7yd08vjus.ttf?t=1627660738142") format("truetype");
-}
-
-.iconfont {
-	font-family: "iconfont" !important;
-	font-size: 16px;
-	font-style: normal;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-.icon-xiugaixinxi:before {
-	content: "\e639";
 }
 </style>
