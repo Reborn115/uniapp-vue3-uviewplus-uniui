@@ -120,8 +120,7 @@ page {
 	flex-direction: column;
 	margin: 30rpx 30rpx;
 	border-radius: 20rpx;
-	background-color: #ffffff;
-	height: 13%;
+	background-color: #ffffff;	
 
 	.wrap {
 		padding: 20rpx 30rpx;
