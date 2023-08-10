@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onMounted, onUnmounted,onBeforeUnmount } from 'vue'
+import { reactive } from 'vue'
 import QiunDataCharts from '../../uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue'
 import request from '../../request/request'
 import text from '../../uni_modules/uview-plus/libs/config/props/text';
