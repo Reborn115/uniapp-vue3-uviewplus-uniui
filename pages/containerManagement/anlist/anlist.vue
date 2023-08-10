@@ -610,6 +610,7 @@ function change(index) {
 canvas {
 	width: 100vw;
 	height: 80vh;
+    margin-top: 15vh;
 }
 
 </style>
