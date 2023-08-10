@@ -1,223 +1,189 @@
 <template>
-  <view class="content">
-    <view class="tabs">
-      <u-sticky bgColor="linear-gradient(to right, #12D8FA, #a5fecb)">
-        <u-tabs
-          @change="change"
-          :current="currentTabIndex"
-          :list="tabslist"
-          lineColor="white"
-          :activeStyle="{
-            color: 'white',
-            fontWeight: 'bold',
-            transform: 'scale(1.05)',
-          }"
-          :inactiveStyle="{
-            color: 'white',
-            transform: 'scale(1)',
-          }"
-          itemStyle="height: 34px;"
-        >
-          <template #right>
-            <!-- <div class="line" /> -->
-          </template>
-        </u-tabs>
-      </u-sticky>
+  <u-toast ref="uToast"></u-toast>
+  <view class="container">
+    <view class="bell-icon">
+      <view style="width:80vw"></view>
+      <u-icon name="bell" color="#535353" size="40"></u-icon>
     </view>
-    <view class="list">
-      <uni-datetime-picker
-        v-model="datetimerange"
-        type="datetimerange"
-        rangeSeparator="至"
-      />
-      <view v-if="currentTabIndex == 0">
-        <uni-card :is-shadow="false" class="container">
-          <view class="info">
-            <view class="title">
-              <h3>图书馆学习</h3>
-            </view>
-            <view>
-              <text class="sex">性别不限</text>
-              <text>人数不限</text>
-            </view>
-            <view>
-              <text>开始时间：2023-4-12 7:30</text>
-            </view>
-            <view class="tags">
-              <u-tag
-                text="标签"
-                type="info"
-                shape="circle"
-                plain
-                borderColor="#EFEFEF"
-              ></u-tag>
-              <u-tag
-                text="标签"
-                type="info"
-                shape="circle"
-                plain
-                borderColor="#EFEFEF"
-              ></u-tag>
-              <u-tag
-                text="标签"
-                type="info"
-                shape="circle"
-                plain
-                borderColor="#EFEFEF"
-              ></u-tag>
-            </view>
-          </view>
-          <view class="pickbotton">
-            <u-button
-              text="Pal一下"
-              color="linear-gradient(to bottom, #29A7FE, #62DFE5)"
-              shape="circle"
-            ></u-button>
-          </view>
-        </uni-card>
-        <view class="add">
-          <u--image
-            :lazy-load="true"
-            :showLoading="true"
-            width="55px"
-            height="55px"
-            src="https://s2.loli.net/2023/04/05/TNSu8oipV5LJqAr.png"
-            shape="circle"
-          ></u--image>
-        </view>
-      </view>
-      <view v-if="currentTabIndex == 1"> </view>
-      <view v-if="currentTabIndex == 2"> </view>
+    <view class="camera-icon" @click="showCamera">
+      <u-icon name="camera" color="#efefef" size="200"></u-icon>
+    </view>
+    <view class="search-bar">
+      <u-search shape="round" :show-action="false" :clearabled="true" v-model="containerNumber" placeholder="请输入集装箱箱号" @change="onContainerNumberChange" @search="onSearch" @custom="onSearch">
+      </u-search>
     </view>
   </view>
 </template>
 
 <script>
-import uText from "../../uni_modules/uview-plus/components/u--text/u--text.vue";
+import request from "@/request/request.js";
+import { ref } from 'vue';
+import { getCurrentInstance } from 'vue'
+
 export default {
-  components: { uText },
-  data() {
-    return {
-      datetimerange: "",
-      currentTabIndex: 0,
-      tabslist: [
-        {
-          name: "全部",
-        },
-        {
-          name: "运动",
-        },
-        {
-          name: "美食",
-        },
-        {
-          name: "出行",
-        },
-        {
-          name: "学习",
-        },
-        {
-          name: "其他",
-        },
-      ],
-    };
+  data(){
+    return{}
   },
-  onLoad() {},
   methods: {
-    change(index) {
-      console.log(index);
-      if (this.currentTabIndex != index.index) {
-        this.currentTabIndex = index.index;
-        console.log(this.currentTabIndex);
-      }
-    },
   },
-};
+  setup() {
+    const instance= getCurrentInstance();
+    const containerNumber = ref('EITU178639');
+    const containerInfo=ref('');
+    const cameraImagePath = ref('');
+    function showToast(params) {
+      instance.proxy.$refs.uToast.show({
+        ...params,
+        complete() {
+          params.url &&
+            uni.navigateTo({
+              url: params.url,
+            });
+        },
+      });
+    }
+    // 调用接口进行搜索并获取数据
+    async function searchContainerData(containerNumber) {
+      const res = await request("/api/iot/get-container", "POST", {
+        number:containerNumber
+      });
+      if (res.code == "00000") {
+        containerInfo.value=res.data.containerInfo
+        return {containerInfo:res.data}
+      } else {
+        showToast({
+          type: "error",
+          message: res.message,
+        });
+      }
+    }
+
+    // 当点击搜索或回车
+    async function onSearch(value) {
+      console.log(value);
+      try {
+        // 调用接口进行搜索并获取数据
+        const data = await searchContainerData(containerNumber.value);
+
+        // 将数据存储到本地
+        
+        if(data.containerInfo){
+          uni.setStorageSync('containerData', data.containerInfo);
+          // 跳转至数据展示页面，并将数据作为URL参数传递
+          // console.log('搜索传参',data.containerInfo);
+          // console.log('搜索存参',uni.getStorageSync("containerData"));
+          showToast({
+            type: "success",
+            message: '搜索成功',
+            url: '/pages/index/containerDetail/containerDetail',
+          });
+        }
+        // uni.navigateTo({
+        //   url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(data.containerInfo)),
+        // });
+      } catch (error) {
+        console.error('搜索出错：', error);
+        showToast({
+          type: "error",
+          message: data.message,
+        });
+      }
+    }
+
+    function onContainerNumberChange(value) {
+      console.log(value);
+    }
+
+    const showCamera = () => {
+      uni.chooseImage({
+        count: 1,
+        sizeType: ['compressed'],
+        success: (res) => {
+          const tempFilePaths = res.tempFilePaths;
+          cameraImagePath.value = tempFilePaths[0];
+          console.log('cameraImagePath', cameraImagePath.value);
+
+          uni.uploadFile({
+            url: 'https://cs.api.yuleng.top/api/iot/detect',
+            filePath: res.tempFilePaths[0],
+            header:{
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + uni.getStorageSync("token")
+            },
+            name: 'file',
+            success: (uploadRes) => {
+              const res=JSON.parse(uploadRes.data);
+              if(res.code=='00000'){
+                console.log('上传成功', JSON.parse(uploadRes.data));
+                const containerInfo=JSON.parse(uploadRes.data).data
+                uni.setStorageSync('containerData', containerInfo);
+                console.log('拍照传参',containerInfo);
+                showToast({
+                  type: "success",
+                  message: '识别成功',
+                  url: '/pages/index/containerDetail/containerDetail',
+                });
+                // uni.navigateTo({
+                //   url: '/pages/index/containerDetail/containerDetail?data=' + encodeURIComponent(JSON.stringify(containerInfo)),
+                // });
+              } else{
+                showToast({
+                  type: "error",
+                  message: JSON.parse(uploadRes.data).message,
+                });
+              }
+            },
+            fail: (uploadError) => {
+              console.error('上传失败：', uploadError);
+            }
+          });
+        },
+        fail: (error) => {
+          console.error('拍照失败：', error);
+        },
+      });
+    };
+
+    return {
+      containerNumber,
+      containerInfo,
+      cameraImagePath,
+      onSearch,
+      onContainerNumberChange,
+      showCamera
+    };
+  }
+}
 </script>
 
+
 <style lang="scss" scoped>
-.add {
-  position: absolute;
-  top: 90vh;
-  left: 80vw;
-}
-::v-deep .uni-card__content {
-  display: flex !important;
-}
-.pickbotton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30vw;
-  height: 18vh;
-}
-::v-deep .u-button {
-  width: 25vw !important;
-  height: 5vh !important;
-}
-.container {
+.search-bar{
+  width: 90vw;
+  height: 20vh;
   display: flex;
 }
-::v-deep .u-tag {
-  margin-right: 3vw !important;
-  // width: 10vw !important;
-  // align-items: center !important;
-  // box-shadow: 0px 0px 12px 1px rgba(0, 0, 0, 0.2) !important;
-}
-.sex {
-  margin-right: 3vw;
-}
-.tags {
-  display: flex;
-}
-.info {
-  width: 50vw;
-  height: 18vh;
+.bell-icon{
   display: flex;
   justify-content: space-around;
-  flex-direction: column;
+  height: 5vh;
+  align-items: center;
 }
-.title {
-  font-size: 17px;
-  font-weight: bold;
+.camera-icon{
+  height: 50vh;
+  width: 85vw;
+  background-color: #003664;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-::v-deep .uni-card {
-  // display: flex;
-  // flex-direction: row !important;
-  margin: 0 !important;
-  margin-top: 2vh !important;
-  // padding: 0 !important;
-  border-radius: 10px;
-  height: 20vh;
-  width: 83.5vw;
-  box-shadow: 5px 5px 8px #bebebe !important;
-}
-.list {
-  width: 90vw;
-  margin-top: 2vh;
-}
-.tabs {
+.container{
+  height: 100vh;
   width: 100vw;
-  background-image: linear-gradient(to bottom, #3bcaf2, #95f5d0) !important;
-  padding-left: 4vw;
   display: flex;
-  // justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  flex-direction: row;
-}
-/* 竖线 */
-.line {
-  float: left;
-  width: 0.1em;
-  height: 1.5em;
-  margin-right: 1em;
-  margin-left: 1em;
-  background: #f3f3f3;
-}
-
-.content {
-  display: flex;
   flex-direction: column;
-  align-items: center;
 }
 </style>
