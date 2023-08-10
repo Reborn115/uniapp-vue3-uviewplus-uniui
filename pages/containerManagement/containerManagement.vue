@@ -1,16 +1,20 @@
 <template>
-	<view class="container">
-		<view class="navigation">
-			<text class="title">堆场管理</text>
-			<view class="nav-icon">
-				<image src="../../static/error.png" class="icon-error" @click="toAbnormity"></image>
-				<image src="../../static/analist.png" class="icon-anlist" @click="toAnalist"></image>
+	<view class="container" >
+		<view style="position: fixed;background-color: #fff;">
+			<view style="height: 4vh;"></view>
+			<view class="navigation">
+				<text class="title">堆场管理</text>
+				<view class="nav-icon">
+					<image src="../../static/error.png" class="icon-error" @click="toAbnormity"></image>
+					<image src="../../static/analist.png" class="icon-anlist" @click="toAnalist"></image>
+				</view>
+			</view>
+			<view class="search-bar">
+			  <u-search shape="round" :show-action="false" :clearabled="true" v-model="searchText" placeholder="箱号/地址/区域/类型" @change="onContainerNumberChange" @search="onSearch" @custom="onSearch">
+			  </u-search>
 			</view>
 		</view>
-		<view class="search-bar">
-		  <u-search shape="round" :show-action="false" :clearabled="true" v-model="searchText" placeholder="箱号/地址/区域/类型" @change="onContainerNumberChange" @search="onSearch" @custom="onSearch">
-		  </u-search>
-		</view>
+		<view style="height: 1vh;"></view>
 		<view class="area-A area">
 			<view>A区</view>
 			<view class="A-col-1 col-1">
@@ -252,6 +256,7 @@ import request from "@/request/request.js";
 import { onShow } from "@dcloudio/uni-app"
 import { ref,onMounted } from 'vue';
 const searchText = ref('');
+const bar = ref('  ')
 const color = ref('');
 const colorList1 = ref(['#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff'
 						,'#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff'
@@ -298,8 +303,8 @@ onShow(async()=>{
 	try{
 		const res = await a();
 		if (res.code == "00000") {
+			  await clearColor(res.data.containerInfoList);
 		      await processData(res.data.containerInfoList);
-			  // console.log(res.data);
 		    } else {
 		}
 		
@@ -307,6 +312,42 @@ onShow(async()=>{
 		console.error('请求出错：', error);
 	}
 })
+//清空方块颜色
+async function clearColor(res){
+	try{
+		for(let i = 0;i < res.length;i++){
+			let position = res[i].position;
+			let area = position[0];
+			let index = position[1];
+			let layer = position.substring(3,4);
+			let x = position.substring(5,6);
+			let y = position.substring(7);
+			let list_index = 16*(index-1)+(y-1)*4+(x-1+1)-1;
+			if(layer == 1){
+				switch(area){
+					case 'A':
+						colorList1.value[list_index] = '#fff';
+						break;
+					case 'B':
+						colorList2.value[list_index] = '#fff';
+						break;
+					case 'C':
+						colorList3.value[list_index] = '#fff';
+						break;
+					case 'D':
+						colorList4.value[list_index] = '#fff';
+						break;
+					case 'E':
+						colorList5.value[list_index] = '#fff';
+						break;
+				}
+			}
+		}
+	}catch(error){
+		console.log('---',error);
+	}
+	
+}
 //处理集装箱数据
 async function processData(res){
 	try{
@@ -321,19 +362,19 @@ async function processData(res){
 			if(layer == 1 && res[i].status === '堆场中'){
 				switch(area){
 					case 'A':
-						colorList1.value[list_index] = getColor(res[i].owner);
+						colorList1.value[list_index] = await getColor(res[i].owner);
 						break;
 					case 'B':
-						colorList2.value[list_index] = getColor(res[i].owner);
+						colorList2.value[list_index] = await getColor(res[i].owner);
 						break;
 					case 'C':
-						colorList3.value[list_index] = getColor(res[i].owner);
+						colorList3.value[list_index] = await getColor(res[i].owner);
 						break;
 					case 'D':
-						colorList4.value[list_index] = getColor(res[i].owner);
+						colorList4.value[list_index] = await getColor(res[i].owner);
 						break;
 					case 'E':
-						colorList5.value[list_index] = getColor(res[i].owner);
+						colorList5.value[list_index] = await getColor(res[i].owner);
 						break;
 				}
 			}
@@ -344,20 +385,24 @@ async function processData(res){
 	
 }
 //姓名获取颜色
-function getColor(name) {
-  let sum = 0;
-    for (let i = 0; i < name.length; i++) {
-      sum += name.charCodeAt(i);
-    }
-  
-    // 生成颜色的 RGB 值
-    const red = (sum * 73) % 256;
-    const green = (sum * 113) % 256;
-    const blue = (sum * 163) % 256;
-  
-    // 将 RGB 值转换为颜色字符串
-    const color = "#" + toHex(red) + toHex(green) + toHex(blue);
-    return color;
+async function getColor(name) {
+	try{
+		let sum = 0;
+		  for (let i = 0; i < name.length; i++) {
+		    sum += name.charCodeAt(i);
+		  }
+		
+		  // 生成颜色的 RGB 值
+		  const red = (sum * 73) % 256;
+		  const green = (sum * 113) % 256;
+		  const blue = (sum * 163) % 256;
+		
+		  // 将 RGB 值转换为颜色字符串
+		  const color = "#" + toHex(red) + toHex(green) + toHex(blue);
+		  return color;
+	}catch(error){
+		console.log('---',error);
+	}
 }
 // 辅助函数，将数值转换为两位十六进制字符串
 function toHex(value) {
@@ -424,6 +469,7 @@ function onContainerNumberChange(value) {
 
 <style scoped lang="scss">
 .navigation {
+	
 	display: flex;
 	justify-content: space-between;
 	width: 100vw;
@@ -452,9 +498,12 @@ function onContainerNumberChange(value) {
 
 .search-bar{
   width: 90vw;
-  height: 20vh;
+  height: 10vh;
   margin-top: 4vh;
   margin-left: 5vw;
+}
+.area-A {
+	margin-top: 25vh;
 }
 .area {
 	display: flex;
