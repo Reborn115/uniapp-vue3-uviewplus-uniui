@@ -157,7 +157,7 @@ function getServerData(xData, yData) {
             state.chartData = JSON.parse(JSON.stringify(res));
             state.chartData1 = JSON.parse(JSON.stringify(res1));
             resolve()
-        },1500)
+        },0)
     })
 }
 
