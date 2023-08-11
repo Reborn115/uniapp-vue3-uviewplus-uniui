@@ -47,8 +47,8 @@ export default {
       imgUrl:
         "http://cs.file.yuleng.top/avatar/container_logo.jpg",
       formData: {
-        phone: "17665104674",
-        password: "123456",
+        phone: "",
+        password: "",
       },
       range: [{ value: 1, text: "" }],
       rules: {
