@@ -39,6 +39,13 @@
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
+		},		
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "## TEST ##",
+				"enablePullDownRefresh": false
+			}
 		},
 		{
 			"path": "pages/pollutionMonitor/pollutionMonitor",
