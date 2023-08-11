@@ -1,16 +1,20 @@
 <template>
-	<view class="container">
-		<view class="navigation">
-			<text class="title">堆场管理</text>
-			<view class="nav-icon">
-				<image src="../../static/error.png" class="icon-error" @click="toAbnormity"></image>
-				<image src="../../static/analist.png" class="icon-anlist" @click="toAnalist"></image>
+	<view class="container" >
+		<view style="position: fixed;background-color: #fff;">
+			<view style="height: 4vh;"></view>
+			<view class="navigation">
+				<text class="title">堆场管理</text>
+				<view class="nav-icon">
+					<image src="../../static/error.png" class="icon-error" @click="toAbnormity"></image>
+					<image src="../../static/analist.png" class="icon-anlist" @click="toAnalist"></image>
+				</view>
+			</view>
+			<view class="search-bar">
+			  <u-search shape="round" :show-action="false" :clearabled="true" v-model="searchText" placeholder="箱号/地址/区域/类型" @change="onContainerNumberChange" @search="onSearch" @custom="onSearch">
+			  </u-search>
 			</view>
 		</view>
-		<view class="search-bar">
-		  <u-search shape="round" :show-action="false" :clearabled="true" v-model="searchText" placeholder="箱号/地址/区域/类型" @change="onContainerNumberChange" @search="onSearch" @custom="onSearch">
-		  </u-search>
-		</view>
+		<view style="height: 1vh;"></view>
 		<view class="area-A area">
 			<view>A区</view>
 			<view class="A-col-1 col-1">
@@ -161,10 +165,10 @@
 				<view class="a-1 container2" @click = "toContanPage('D1')">
 					<view>1</view>
 					<view class="A-container container1">
-						<view :style="{backgroundColor:colorList4[12]}" class="item"></view><view :style="{backgroundColor:colorList4[13]}" class="item"></view><view :style="{backgroundColor:colorList3[14]}" class="item"></view><view :style="{backgroundColor:colorList4[15]}" class="item"></view>
-						<view :style="{backgroundColor:colorList4[8]}" class="item"></view><view :style="{backgroundColor:colorList4[9]}" class="item"></view><view :style="{backgroundColor:colorList3[10]}" class="item"></view><view :style="{backgroundColor:colorList4[11]}" class="item"></view>
-						<view :style="{backgroundColor:colorList4[4]}" class="item"></view><view :style="{backgroundColor:colorList4[5]}" class="item"></view><view :style="{backgroundColor:colorList3[6]}" class="item"></view><view :style="{backgroundColor:colorList4[7]}" class="item"></view>
-						<view :style="{backgroundColor:colorList4[0]}" class="item"></view><view :style="{backgroundColor:colorList4[1]}" class="item"></view><view :style="{backgroundColor:colorList3[2]}" class="item"></view><view :style="{backgroundColor:colorList4[3]}" class="item"></view>
+						<view :style="{backgroundColor:colorList4[12]}" class="item"></view><view :style="{backgroundColor:colorList4[13]}" class="item"></view><view :style="{backgroundColor:colorList4[14]}" class="item"></view><view :style="{backgroundColor:colorList4[15]}" class="item"></view>
+						<view :style="{backgroundColor:colorList4[8]}" class="item"></view><view :style="{backgroundColor:colorList4[9]}" class="item"></view><view :style="{backgroundColor:colorList4[10]}" class="item"></view><view :style="{backgroundColor:colorList4[11]}" class="item"></view>
+						<view :style="{backgroundColor:colorList4[4]}" class="item"></view><view :style="{backgroundColor:colorList4[5]}" class="item"></view><view :style="{backgroundColor:colorList4[6]}" class="item"></view><view :style="{backgroundColor:colorList4[7]}" class="item"></view>
+						<view :style="{backgroundColor:colorList4[0]}" class="item"></view><view :style="{backgroundColor:colorList4[1]}" class="item"></view><view :style="{backgroundColor:colorList4[2]}" class="item"></view><view :style="{backgroundColor:colorList4[3]}" class="item"></view>
 					</view>
 				</view>
 				<view class="a-3 container2" @click = "toContanPage('D3')">
@@ -181,10 +185,10 @@
 				<view class="a-2 container2" @click = "toContanPage('D2')">
 					<view>2</view>
 					<view class="A-container container1">
-						<view :style="{backgroundColor:colorList4[28]}" class="item"></view><view :style="{backgroundColor:colorList4[29]}" class="item"></view><view :style="{backgroundColor:colorList3[30]}" class="item"></view><view :style="{backgroundColor:colorList4[31]}" class="item"></view>
-						<view :style="{backgroundColor:colorList4[24]}" class="item"></view><view :style="{backgroundColor:colorList4[25]}" class="item"></view><view :style="{backgroundColor:colorList3[26]}" class="item"></view><view :style="{backgroundColor:colorList4[27]}" class="item"></view>
-						<view :style="{backgroundColor:colorList4[20]}" class="item"></view><view :style="{backgroundColor:colorList4[21]}" class="item"></view><view :style="{backgroundColor:colorList3[22]}" class="item"></view><view :style="{backgroundColor:colorList4[23]}" class="item"></view>
-						<view :style="{backgroundColor:colorList4[16]}" class="item"></view><view :style="{backgroundColor:colorList4[17]}" class="item"></view><view :style="{backgroundColor:colorList3[18]}" class="item"></view><view :style="{backgroundColor:colorList4[19]}" class="item"></view>
+						<view :style="{backgroundColor:colorList4[28]}" class="item"></view><view :style="{backgroundColor:colorList4[29]}" class="item"></view><view :style="{backgroundColor:colorList4[30]}" class="item"></view><view :style="{backgroundColor:colorList4[31]}" class="item"></view>
+						<view :style="{backgroundColor:colorList4[24]}" class="item"></view><view :style="{backgroundColor:colorList4[25]}" class="item"></view><view :style="{backgroundColor:colorList4[26]}" class="item"></view><view :style="{backgroundColor:colorList4[27]}" class="item"></view>
+						<view :style="{backgroundColor:colorList4[20]}" class="item"></view><view :style="{backgroundColor:colorList4[21]}" class="item"></view><view :style="{backgroundColor:colorList4[22]}" class="item"></view><view :style="{backgroundColor:colorList4[23]}" class="item"></view>
+						<view :style="{backgroundColor:colorList4[16]}" class="item"></view><view :style="{backgroundColor:colorList4[17]}" class="item"></view><view :style="{backgroundColor:colorList4[18]}" class="item"></view><view :style="{backgroundColor:colorList4[19]}" class="item"></view>
 						
 					</view>
 				</view>
@@ -206,18 +210,18 @@
 					<view>1</view>
 					<view class="A-container container1">
 						<view :style="{backgroundColor:colorList5[12]}" class="item"></view><view :style="{backgroundColor:colorList5[13]}" class="item"></view><view :style="{backgroundColor:colorList5[14]}" class="item"></view><view :style="{backgroundColor:colorList5[15]}" class="item"></view>
-						<view :style="{backgroundColor:colorList5[8]}" class="item"></view><view :style="{backgroundColor:colorList4[9]}" class="item"></view><view :style="{backgroundColor:colorList3[10]}" class="item"></view><view :style="{backgroundColor:colorList3[11]}" class="item"></view>
-						<view :style="{backgroundColor:colorList5[4]}" class="item"></view><view :style="{backgroundColor:colorList4[5]}" class="item"></view><view :style="{backgroundColor:colorList3[6]}" class="item"></view><view :style="{backgroundColor:colorList3[7]}" class="item"></view>
-						<view :style="{backgroundColor:colorList5[0]}" class="item"></view><view :style="{backgroundColor:colorList4[1]}" class="item"></view><view :style="{backgroundColor:colorList3[2]}" class="item"></view><view :style="{backgroundColor:colorList3[3]}" class="item"></view>
+						<view :style="{backgroundColor:colorList5[8]}" class="item"></view><view :style="{backgroundColor:colorList5[9]}" class="item"></view><view :style="{backgroundColor:colorList5[10]}" class="item"></view><view :style="{backgroundColor:colorList5[11]}" class="item"></view>
+						<view :style="{backgroundColor:colorList5[4]}" class="item"></view><view :style="{backgroundColor:colorList5[5]}" class="item"></view><view :style="{backgroundColor:colorList5[6]}" class="item"></view><view :style="{backgroundColor:colorList5[7]}" class="item"></view>
+						<view :style="{backgroundColor:colorList5[0]}" class="item"></view><view :style="{backgroundColor:colorList5[1]}" class="item"></view><view :style="{backgroundColor:colorList5[2]}" class="item"></view><view :style="{backgroundColor:colorList5[3]}" class="item"></view>
 					</view>                                     
 				</view>                                         
 				<view class="a-3 container2"  @click = "toContanPage('E3')">                   
 					<view>3</view>                              
 					<view class="A-container container1">       
-						<view :style="{backgroundColor:colorList5[44]}" class="item"></view><view :style="{backgroundColor:colorList4[45]}" class="item"></view><view :style="{backgroundColor:colorList5[46]}" class="item"></view><view :style="{backgroundColor:colorList5[47]}" class="item"></view>
-						<view :style="{backgroundColor:colorList5[40]}" class="item"></view><view :style="{backgroundColor:colorList4[41]}" class="item"></view><view :style="{backgroundColor:colorList5[42]}" class="item"></view><view :style="{backgroundColor:colorList5[43]}" class="item"></view>
-						<view :style="{backgroundColor:colorList5[36]}" class="item"></view><view :style="{backgroundColor:colorList4[37]}" class="item"></view><view :style="{backgroundColor:colorList5[38]}" class="item"></view><view :style="{backgroundColor:colorList5[39]}" class="item"></view>
-						<view :style="{backgroundColor:colorList5[32]}" class="item"></view><view :style="{backgroundColor:colorList4[33]}" class="item"></view><view :style="{backgroundColor:colorList5[34]}" class="item"></view><view :style="{backgroundColor:colorList5[35]}" class="item"></view>
+						<view :style="{backgroundColor:colorList5[44]}" class="item"></view><view :style="{backgroundColor:colorList5[45]}" class="item"></view><view :style="{backgroundColor:colorList5[46]}" class="item"></view><view :style="{backgroundColor:colorList5[47]}" class="item"></view>
+						<view :style="{backgroundColor:colorList5[40]}" class="item"></view><view :style="{backgroundColor:colorList5[41]}" class="item"></view><view :style="{backgroundColor:colorList5[42]}" class="item"></view><view :style="{backgroundColor:colorList5[43]}" class="item"></view>
+						<view :style="{backgroundColor:colorList5[36]}" class="item"></view><view :style="{backgroundColor:colorList5[37]}" class="item"></view><view :style="{backgroundColor:colorList5[38]}" class="item"></view><view :style="{backgroundColor:colorList5[39]}" class="item"></view>
+						<view :style="{backgroundColor:colorList5[32]}" class="item"></view><view :style="{backgroundColor:colorList5[33]}" class="item"></view><view :style="{backgroundColor:colorList5[34]}" class="item"></view><view :style="{backgroundColor:colorList5[35]}" class="item"></view>
 					</view>                                     
 				</view>                                         
 			</view>                                             
@@ -225,10 +229,10 @@
 				<view class="a-2 container2"  @click = "toContanPage('E2')">                   
 					<view>2</view>                              
 					<view class="A-container container1">      
-						 <view :style="{backgroundColor:colorList5[28]}" class="item"></view><view :style="{backgroundColor:colorList4[29]}" class="item"></view><view :style="{backgroundColor:colorList3[30]}" class="item"></view><view :style="{backgroundColor:colorList5[31]}" class="item"></view>
-						 <view :style="{backgroundColor:colorList5[24]}" class="item"></view><view :style="{backgroundColor:colorList4[25]}" class="item"></view><view :style="{backgroundColor:colorList3[26]}" class="item"></view><view :style="{backgroundColor:colorList5[27]}" class="item"></view>
-						 <view :style="{backgroundColor:colorList5[20]}" class="item"></view><view :style="{backgroundColor:colorList4[21]}" class="item"></view><view :style="{backgroundColor:colorList3[22]}" class="item"></view><view :style="{backgroundColor:colorList5[23]}" class="item"></view>
-						 <view :style="{backgroundColor:colorList5[16]}" class="item"></view><view :style="{backgroundColor:colorList4[17]}" class="item"></view><view :style="{backgroundColor:colorList3[18]}" class="item"></view><view :style="{backgroundColor:colorList5[19]}" class="item"></view>
+						 <view :style="{backgroundColor:colorList5[28]}" class="item"></view><view :style="{backgroundColor:colorList5[29]}" class="item"></view><view :style="{backgroundColor:colorList5[30]}" class="item"></view><view :style="{backgroundColor:colorList5[31]}" class="item"></view>
+						 <view :style="{backgroundColor:colorList5[24]}" class="item"></view><view :style="{backgroundColor:colorList5[25]}" class="item"></view><view :style="{backgroundColor:colorList5[26]}" class="item"></view><view :style="{backgroundColor:colorList5[27]}" class="item"></view>
+						 <view :style="{backgroundColor:colorList5[20]}" class="item"></view><view :style="{backgroundColor:colorList5[21]}" class="item"></view><view :style="{backgroundColor:colorList5[22]}" class="item"></view><view :style="{backgroundColor:colorList5[23]}" class="item"></view>
+						 <view :style="{backgroundColor:colorList5[16]}" class="item"></view><view :style="{backgroundColor:colorList5[17]}" class="item"></view><view :style="{backgroundColor:colorList5[18]}" class="item"></view><view :style="{backgroundColor:colorList5[19]}" class="item"></view>
 					 
 						
 					</view>
@@ -236,10 +240,10 @@
 				<view class="a-4 container2" @click = "toContanPage('E4')">
 					<view>4</view>
 					<view class="A-container container1">
-						<view :style="{backgroundColor:colorList5[60]}" class="item"></view><view :style="{backgroundColor:colorList4[61]}" class="item"></view><view :style="{backgroundColor:colorList5[62]}" class="item"></view><view :style="{backgroundColor:colorList5[63]}" class="item"></view>
-						<view :style="{backgroundColor:colorList5[56]}" class="item"></view><view :style="{backgroundColor:colorList4[57]}" class="item"></view><view :style="{backgroundColor:colorList5[58]}" class="item"></view><view :style="{backgroundColor:colorList5[59]}" class="item"></view>
-						<view :style="{backgroundColor:colorList5[52]}" class="item"></view><view :style="{backgroundColor:colorList4[53]}" class="item"></view><view :style="{backgroundColor:colorList5[54]}" class="item"></view><view :style="{backgroundColor:colorList5[55]}" class="item"></view>
-						<view :style="{backgroundColor:colorList5[48]}" class="item"></view><view :style="{backgroundColor:colorList4[49]}" class="item"></view><view :style="{backgroundColor:colorList5[50]}" class="item"></view><view :style="{backgroundColor:colorList5[51]}" class="item"></view>
+						<view :style="{backgroundColor:colorList5[60]}" class="item"></view><view :style="{backgroundColor:colorList5[61]}" class="item"></view><view :style="{backgroundColor:colorList5[62]}" class="item"></view><view :style="{backgroundColor:colorList5[63]}" class="item"></view>
+						<view :style="{backgroundColor:colorList5[56]}" class="item"></view><view :style="{backgroundColor:colorList5[57]}" class="item"></view><view :style="{backgroundColor:colorList5[58]}" class="item"></view><view :style="{backgroundColor:colorList5[59]}" class="item"></view>
+						<view :style="{backgroundColor:colorList5[52]}" class="item"></view><view :style="{backgroundColor:colorList5[53]}" class="item"></view><view :style="{backgroundColor:colorList5[54]}" class="item"></view><view :style="{backgroundColor:colorList5[55]}" class="item"></view>
+						<view :style="{backgroundColor:colorList5[48]}" class="item"></view><view :style="{backgroundColor:colorList5[49]}" class="item"></view><view :style="{backgroundColor:colorList5[50]}" class="item"></view><view :style="{backgroundColor:colorList5[51]}" class="item"></view>
 					</view>
 				</view>
 			</view>
@@ -252,6 +256,7 @@ import request from "@/request/request.js";
 import { onShow } from "@dcloudio/uni-app"
 import { ref,onMounted } from 'vue';
 const searchText = ref('');
+const bar = ref('  ')
 const color = ref('');
 const colorList1 = ref(['#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff'
 						,'#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff'
@@ -464,6 +469,7 @@ function onContainerNumberChange(value) {
 
 <style scoped lang="scss">
 .navigation {
+	
 	display: flex;
 	justify-content: space-between;
 	width: 100vw;
@@ -492,9 +498,12 @@ function onContainerNumberChange(value) {
 
 .search-bar{
   width: 90vw;
-  height: 20vh;
+  height: 10vh;
   margin-top: 4vh;
   margin-left: 5vw;
+}
+.area-A {
+	margin-top: 25vh;
 }
 .area {
 	display: flex;

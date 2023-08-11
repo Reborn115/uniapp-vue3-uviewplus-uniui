@@ -56,10 +56,14 @@
 		},
 		{
 			"path": "pages/containerManagement/containerManagement",
-			"style": {
-				"navigationBarTitleText": "堆场管理",
-				"enablePullDownRefresh": false
-			}
+			"style":   {
+                "navigationBarTitleText": "堆场管理",
+                "enablePullDownRefresh": false,
+				"navigationStyle":"custom",
+				"app-plus":{
+					"titleView":false
+				 }
+            }
 		},
 		{
 			"path": "pages/containerManagement/anlist/anlist",
