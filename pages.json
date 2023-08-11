@@ -14,7 +14,7 @@
 				"navigationBarBackgroundColor": "#ffffff",
 				"enablePullDownRefresh": false
 			}
-		},		
+		},
 		{
 			"path": "pages/mine/mine",
 			"style": {
@@ -39,7 +39,7 @@
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-		},		
+		},
 		{
 			"path": "pages/message/message",
 			"style": {
@@ -56,14 +56,14 @@
 		},
 		{
 			"path": "pages/containerManagement/containerManagement",
-			"style":   {
-                "navigationBarTitleText": "堆场管理",
-                "enablePullDownRefresh": false,
-				"navigationStyle":"custom",
-				"app-plus":{
-					"titleView":false
-				 }
-            }
+			"style": {
+				"navigationBarTitleText": "堆场管理",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleView": false
+				}
+			}
 		},
 		{
 			"path": "pages/containerManagement/anlist/anlist",
@@ -83,6 +83,20 @@
 			"path": "pages/containerManagement/contanPage/contanPage",
 			"style": {
 				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/index/error/error",
+			"style": {
+				"navigationBarTitleText": "集装箱故障通知",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/index/error/errorDetail/errorDetail",
+			"style": {
+				"navigationBarTitleText": "集装箱故障详情",
 				"enablePullDownRefresh": false
 			}
 		}
