@@ -1,75 +1,16 @@
 <script setup>
 import { reactive } from 'vue'
-import QiunDataCharts from '../../uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue'
-import request from '../../request/request'
-import text from '../../uni_modules/uview-plus/libs/config/props/text';
+import QiunDataCharts from '@/uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue'
+import request from '@/request/request.js';
+import text from '@/uni_modules/uview-plus/libs/config/props/text';
 import {onHide,onShow} from '@dcloudio/uni-app'
 
 let state = reactive({
-	chartData: {
-		categories:[],
-		series:[]
-	},
-	chartData1: {
-		categories:[],
-		series:[]
-	}
+	chartData: {},
+	chartData1: {}
 })
 
-let mockData = {
-    "code": "00000",
-    "message": "请求正常",
-    "data": {
-        "lastUpdateTime": "2023-08-01T09:21:17.000+00:00",
-        "data": [
-            {
-                "id": 416,
-                "humidity": 63,
-                "pm": 50,
-                "tds": 55,
-                "temperature": 23,
-                "turbidity": 1990,
-                "time": "2023-08-01T09:21:11.000+00:00"
-            },
-            {
-                "id": 417,
-                "humidity": 43,
-                "pm": 50,
-                "tds": 50,
-                "temperature": 31,
-                "turbidity": 1956,
-                "time": "2023-08-01T09:21:12.000+00:00"
-            },
-            {
-                "id": 418,
-                "humidity": 73,
-                "pm": 50,
-                "tds": 55,
-                "temperature": 31,
-                "turbidity": 1994.5,
-                "time": "2023-08-01T09:21:14.000+00:00"
-            },
-            {
-                "id": 419,
-                "humidity": 53,
-                "pm": 50,
-                "tds": 0,
-                "temperature": 21,
-                "turbidity": 2003.1,
-                "time": "2023-08-01T09:21:15.000+00:00"
-            },
-            {
-                "id": 420,
-                "humidity": 23,
-                "pm": 50,
-                "tds": 40,
-                "temperature": 39,
-                "turbidity": 1998.7,
-                "time": "2023-08-01T09:21:17.000+00:00"
-            }
-        ]
-    }
-}
+let mockData = {}
 // 截取过长数字小数点后三位
 function formatProp(prop,len=6){
     let arr =mockData.data.data
@@ -83,8 +24,7 @@ function formatProp(prop,len=6){
 //获取数据
 async function getMonitorData(type=false){
     //监测数据是否是最新的
-	const timestamp=uni.getStorageSync("PMData")
-    console.log("timestamp=========",timestamp)
+	const timestamp=uni.getStorageSync("PMData")    
     const res = await request("/api/iot/sensor/data","get")
     if(res.code!='00000'){
         console.error('/api/iot/sensor/data ',res.message)        
@@ -157,10 +97,11 @@ function getServerData(xData, yData) {
             state.chartData = JSON.parse(JSON.stringify(res));
             state.chartData1 = JSON.parse(JSON.stringify(res1));
             resolve()
-        },1500)
+        },0)
     })
 }
 
+// 轮询更新数据
 function createUpdateRoutine(){    
     clearInterval(timer)
     timer=setInterval(()=>{
@@ -168,10 +109,7 @@ function createUpdateRoutine(){
     },5000)    
 }
 
-onShow(async () => {
-    let time0=new Date()
-    console.log("start------------->")
-    
+onShow(async () => {    
     await getMonitorData(true)	
 	let xData = [1, 2, 3, 4, 5];
 	let tempData=mockData.data.data    
@@ -184,10 +122,8 @@ onShow(async () => {
 	factory("tds")
 	factory("temperature")
 	factory("turbidity")	
-	await getServerData(xData, yData);
-	let time1=new Date()
-	console.log("--------------》耗时：",time1-time0)
-    createUpdateRoutine()
+	await getServerData(xData, yData);	
+    createUpdateRoutine(); //开启轮询
 })
 onHide(()=>{
     console.log('hide and clear Timer')
