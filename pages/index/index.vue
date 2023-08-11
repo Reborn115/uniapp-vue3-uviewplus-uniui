@@ -3,7 +3,7 @@
   <div class="container">
     <div class="bell-icon">
       <div style="width: 80vw"></div>
-      <u-icon name="bell" color="#535353" size="40" />
+      <u-icon name="bell" color="#535353" size="40" @click="showErrorMassage"/>
     </div>
     <div class="camera-icon" @click="showCamera">
       <u-icon name="camera" color="#efefef" size="200" />
@@ -69,7 +69,11 @@ export default {
         });
       }
     };
-
+    const showErrorMassage=()=>{
+      uni.navigateTo({
+        url: '/pages/index/error/error',
+      });
+    };
     const onContainerNumberChange = (value) => {
       console.log(value);
       containerNumber.value=value;
@@ -103,7 +107,12 @@ export default {
             message: '识别成功',
             url: '/pages/index/containerDetail/containerDetail',
           });
-        } else {
+        } else if(parsedUploadRes?.status=="Failed"){
+          showToast({
+            type: "warning",
+            message: '请先登录解锁更多内容',
+          });
+        }else{
           showToast({
             type: 'error',
             message: parsedUploadRes.message,
@@ -120,6 +129,7 @@ export default {
       performSearch,
       onContainerNumberChange,
       showCamera,
+      showErrorMassage
     };
   },
 };

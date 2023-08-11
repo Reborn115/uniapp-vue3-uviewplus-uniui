@@ -87,7 +87,7 @@ export default {
       },
     };
   },
-  onLoad() {
+  onShow() {
     this.showToast({
       type: "warning",
       message: '请先登录解锁更多内容',
