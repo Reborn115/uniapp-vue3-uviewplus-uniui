@@ -31,7 +31,7 @@ import request from '@/request/request.js';
 export default {
   setup() {
     const instance = getCurrentInstance();
-    const containerNumber = ref('EITU178639');
+    const containerNumber = ref('');
     const cameraImagePath = ref('');
 
     const showToast = (params) => {
