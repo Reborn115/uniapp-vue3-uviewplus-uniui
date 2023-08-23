@@ -10,7 +10,7 @@ const request = (url, method, data, header = {},requestType) => {
       }
     }
     uni.request({
-      url: !requestType ? BASE_URL + url : url,
+      url: !requestType ? BASE_URL + url : url,//如果传了 requestType 就不拼接 url
       method: method,
       data: data,
       header: Object.assign(

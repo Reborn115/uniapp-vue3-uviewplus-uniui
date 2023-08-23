@@ -1,6 +1,6 @@
 <template>
-  <u-toast ref="uToast" />
   <div class="container">
+    <u-toast ref="uToast" />
     <div class="bell-icon">
       <div style="width: 80vw"></div>
       <u-icon name="bell" color="#535353" size="40" @click="showErrorMassage"/>
